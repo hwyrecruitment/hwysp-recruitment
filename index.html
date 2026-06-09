@@ -27,7 +27,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 header{background:#0052cc;color:#fff;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .logo{font-size:1rem;font-weight:700}.header-sub{font-size:.75rem;opacity:.75;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}.header-left{display:flex;align-items:center;gap:12px}
 .btn{padding:6px 14px;border-radius:4px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
-.btn-ghost{background:#e8f0fe;color:#0041a3;border:1px solid #c0d4f5;font-weight:600}.btn-ghost:hover{background:rgba(255,255,255,.4)}
+.btn-ghost{background:rgba(255,255,255,.25);color:#fff;border:1px solid rgba(255,255,255,.5)}.btn-ghost:hover{background:rgba(255,255,255,.4)}
 .board-bar{background:#0041a3;padding:8px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .board-title{color:#fff;font-size:.9rem;font-weight:600}
 .stat-chip{background:rgba(255,255,255,.15);color:#fff;border-radius:12px;padding:3px 10px;font-size:.72rem;font-weight:500;display:flex;align-items:center;gap:5px}
@@ -1630,6 +1630,7 @@ function deleteStage(){
 const API_URL='https://script.google.com/macros/s/AKfycbzOMcFDLGjhDe4QosZM36XeqUFZWCOkej8QIRrkEiAz5x7BmYcsKz8b9_izIqOuVEAc/exec';
 const STORAGE_KEY='hwySP_v5_cache';
 let isSyncing=false;
+let saveTimer=null;
 
 function showSyncStatus(msg,color){
   const el=document.getElementById('sync-status');
@@ -1638,21 +1639,38 @@ function showSyncStatus(msg,color){
   el.style.color=color||'#fff';
 }
 
+// Debounce saves — wait 1.5s after last change before pushing
 function saveToStorage(){
-  // Always cache locally first
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,LABELS,CL_TEMPLATE,COLUMNS,CL_LIBRARY}));}catch(e){}
-  // Then push to Google Sheets
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(pushToSheets,1500);
+}
+
+function pushToSheets(){
   if(isSyncing)return;
   isSyncing=true;
   showSyncStatus('\u29d7 Saving...','#ffd700');
-  fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({cards,LABELS,CL_TEMPLATE,COLUMNS,CL_LIBRARY})})
-    .then(r=>r.text())
-    .then(()=>{isSyncing=false;showSyncStatus('\u2713 Saved','#90ee90');setTimeout(()=>showSyncStatus(''),2000);})
-    .catch(()=>{isSyncing=false;showSyncStatus('\u26a0 Offline \u2014 saved locally','#ffd700');setTimeout(()=>showSyncStatus(''),3000);});
+  const payload=JSON.stringify({cards,LABELS,CL_TEMPLATE,COLUMNS,CL_LIBRARY});
+  // Use no-cors mode — we can't read the response but the data gets saved
+  fetch(API_URL+'?action=save',{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'text/plain'},
+    body:payload
+  })
+  .then(()=>{
+    isSyncing=false;
+    showSyncStatus('\u2713 Saved','#90ee90');
+    setTimeout(()=>showSyncStatus(''),2500);
+  })
+  .catch(()=>{
+    isSyncing=false;
+    showSyncStatus('\u26a0 Saved locally only','#ffd700');
+    setTimeout(()=>showSyncStatus(''),3000);
+  });
 }
 
 function loadFromStorage(){
-  // Load local cache instantly so board shows right away
   try{
     const raw=localStorage.getItem(STORAGE_KEY);
     if(raw){
@@ -1667,30 +1685,45 @@ function loadFromStorage(){
   return false;
 }
 
+// JSONP loader — works cross-origin without CORS issues
 function loadFromSheets(callback){
   showSyncStatus('\u29d7 Syncing...','#ffd700');
-  fetch(API_URL)
-    .then(r=>r.text())
-    .then(text=>{
-      if(!text||text==='{}'){showSyncStatus('');callback(false);return;}
-      try{
-        const p=JSON.parse(text);
-        if(p.cards)cards=p.cards;
-        if(p.LABELS)LABELS=p.LABELS;
-        if(p.CL_TEMPLATE)CL_TEMPLATE=p.CL_TEMPLATE;
-        if(p.COLUMNS&&p.COLUMNS.length)COLUMNS=p.COLUMNS;
-        if(p.CL_LIBRARY&&p.CL_LIBRARY.length)CL_LIBRARY=p.CL_LIBRARY;
-        try{localStorage.setItem(STORAGE_KEY,text);}catch(e){}
-        showSyncStatus('\u2713 Synced','#90ee90');
-        setTimeout(()=>showSyncStatus(''),2000);
-        callback(true);
-      }catch(e){showSyncStatus('\u26a0 Sync error','#ffd700');callback(false);}
-    })
-    .catch(()=>{
-      showSyncStatus('\u26a0 Offline \u2014 using local data','#ffd700');
+  const cbName='__hwySP_cb_'+Date.now();
+  const script=document.createElement('script');
+  let done=false;
+
+  window[cbName]=function(data){
+    done=true;
+    delete window[cbName];
+    script.remove();
+    if(!data||!data.cards){showSyncStatus('');callback(false);return;}
+    try{
+      cards=data.cards;
+      if(data.LABELS)LABELS=data.LABELS;
+      if(data.CL_TEMPLATE)CL_TEMPLATE=data.CL_TEMPLATE;
+      if(data.COLUMNS&&data.COLUMNS.length)COLUMNS=data.COLUMNS;
+      if(data.CL_LIBRARY&&data.CL_LIBRARY.length)CL_LIBRARY=data.CL_LIBRARY;
+      try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));}catch(e){}
+      showSyncStatus('\u2713 Synced','#90ee90');
+      setTimeout(()=>showSyncStatus(''),2500);
+      callback(true);
+    }catch(e){showSyncStatus('\u26a0 Sync error','#ffd700');callback(false);}
+  };
+
+  // Timeout fallback — if sheets doesn't respond in 8s use local cache
+  setTimeout(()=>{
+    if(!done){
+      done=true;
+      delete window[cbName];
+      try{script.remove();}catch(e){}
+      showSyncStatus('\u26a0 Using local data','#ffd700');
       setTimeout(()=>showSyncStatus(''),3000);
       callback(false);
-    });
+    }
+  },8000);
+
+  script.src=API_URL+'?callback='+cbName+'&t='+Date.now();
+  document.head.appendChild(script);
 }
 
 function exportData(){
