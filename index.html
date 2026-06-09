@@ -497,7 +497,6 @@ let CL_TEMPLATE=[
     {id:'t_selcert',label:'Selective Certification Requirement(s)',special:'selcert'},
     {id:'t_hrd380',label:'HRD 380 (Act 179) form'},
     {id:'t_prevauth',label:'Previous Employer Authorization Form (HRD 324a)',special:'prevauth'},
-    {id:'t_prevchecks',label:'Previous Employer Check(s)',special:'prevchecks'},
     {id:'t_cleanset',label:'Clean Set of Interview Material',special:'cleanset'},
   ]},
   {id:'s_hwysp',title:'HWY-SP Use Only',items:[
@@ -650,14 +649,12 @@ function buildDetail(){
       '</div>';
     else if(it.special==='licenses') extra=
       '<div class="cl-fields-row" style="margin-top:3px">'+
-        '<div class="radios">'+
-          crad('lic_type_'+activeCardId,'driver','&#128663; Driver\'s License',d.lic_type,'saveData(\'lic_type\',\'driver\')')+
-          crad('lic_type_'+activeCardId,'pe','PE License',d.lic_type,'saveData(\'lic_type\',\'pe\')')+
-          crad('lic_type_'+activeCardId,'both','Both',d.lic_type,'saveData(\'lic_type\',\'both\')')+
-          crad('lic_type_'+activeCardId,'none','None',d.lic_type,'saveData(\'lic_type\',\'none\')')+
-        '</div>'+
+        scb('lic_driver','Driver\'s License')+
+        scb('lic_pe','PE License')+
       '</div>'+
-      '<div class="cl-fields-row" style="margin-top:5px">'+tbox('lic_other_text','Other:','Specify other license...')+'</div>';
+      '<div class="cl-fields-row" style="margin-top:4px">'+
+        tbox('lic_other_text','Other:','Specify other license...')+
+      '</div>';
     else if(it.special==='selcert') extra=tbox('sel_cert_text','Specify:','e.g. Lifting/Carrying');
     else if(it.special==='prevauth') extra=
       '<div class="cl-fields-row" style="margin-top:3px">'+
@@ -665,13 +662,9 @@ function buildDetail(){
           '<option value="">&#8212;</option>'+
           [1,2,3,4,5,6,7,8,9,10].map(n=>'<option value="'+n+'"'+(d.prev_checks_num==n?' selected':'')+'>'+n+'</option>').join('')+
         '</select>')+
-      '</div>';
-    else if(it.special==='prevchecks') extra=
-      '<div class="cl-fields-row" style="margin-top:3px">'+
-        fgrp('No. of checks:','<select class="cl-sel" onchange="saveData(\'prev_checks_num\',this.value)">'+
-          '<option value="">&#8212;</option>'+
-          [1,2,3,4,5,6,7,8,9,10].map(n=>'<option value="'+n+'"'+(d.prev_checks_num==n?' selected':'')+'>'+n+'</option>').join('')+
-        '</select>')+
+      '</div>'+
+      '<div class="cl-fields-row" style="margin-top:4px">'+
+        tbox('prevauth_pas','PAS:','PAS number...')+
       '</div>';
     else if(it.special==='cleanset') extra=
       '<div style="margin-top:4px">'+
@@ -887,7 +880,7 @@ function buildDetail(){
 const CR_KEY_MAP={
   'cond_acc_':'cond_acc','suit_req_':'suitability_req','suit_det_':'suit_det',
   'suit_sus_':'suit_sustain','hrd1_req_':'hrd1_req','onb_type_':'onboarding_type',
-  'final_out_':'final_offer_outcome','wwapps_other_':'wwapps_other','lic_type_':'lic_type'
+  'final_out_':'final_offer_outcome','wwapps_other_':'wwapps_other'
 };
 function crClick(name,val,fn){
   const card=cards.find(c=>c.id===activeCardId);if(!card)return;
@@ -1492,10 +1485,9 @@ function printChecklist(cardId){
       else if(it.special==='igm') sub=[d.igm_date?'Date: '+d.igm_date:null,d.igm_complete?'Done: '+d.igm_complete:null].filter(Boolean).join(' \xb7 ');
       else if(it.special==='pas') sub=d.pas_text?'PAS #: '+d.pas_text:'';
       else if(it.special==='wwapps') sub=d.wwapps_other?'Other applicants interviewed: '+d.wwapps_other:'';
-      else if(it.special==='licenses') sub=[d.lic_type?d.lic_type.charAt(0).toUpperCase()+d.lic_type.slice(1):'',d.lic_other_text?'Other: '+d.lic_other_text:''].filter(Boolean).join(' · ');
-      else if(it.special==='prevauth') sub=d.prev_checks_num?d.prev_checks_num+' check(s)':'';
+      else if(it.special==='licenses') sub=[d.lic_driver?'Driver\'s License':null,d.lic_pe?'PE License':null,d.lic_other_text?'Other: '+d.lic_other_text:null].filter(Boolean).join(', ');
+      else if(it.special==='prevauth') sub=[d.prev_checks_num?d.prev_checks_num+' check(s)':null,d.prevauth_pas?'PAS: '+d.prevauth_pas:null].filter(Boolean).join(' · ');
       else if(it.special==='selcert') sub=d.sel_cert_text||'';
-      else if(it.special==='prevchecks') sub=d.prev_checks_num?d.prev_checks_num+' check(s)':'';
       else if(it.special==='onbtype') sub=d.onboarding_type==='new'?'New Hire/External':d.onboarding_type==='int'?'Internal':'';
       return pR(chk,it.label,sub);
     }).join('');
