@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HWY-SP Recruitment | Hawaii Department of Transportation - Highways</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f0f2f5;--surface:#fff;--surface2:#f4f5f7;--border:#dfe1e6;--text:#172b4d;--muted:#6b778c;--accent:#0052cc;--green:#00875a;--red:#de350b;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+/* LOGIN SCREEN */
+#login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0041a3 0%,#0052cc 50%,#1565c0 100%);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:0}
+#login-screen.hidden{display:none}
+.login-box{background:#fff;border-radius:12px;padding:40px 36px;width:340px;max-width:90vw;box-shadow:0 20px 60px rgba(0,0,0,.3);text-align:center}
+.login-logo{font-size:2rem;margin-bottom:8px}
+.login-title{font-size:1.1rem;font-weight:700;color:#172b4d;margin-bottom:4px}
+.login-sub{font-size:.78rem;color:#6b778c;margin-bottom:28px;line-height:1.5}
+.login-input{width:100%;border:2px solid #dfe1e6;border-radius:6px;padding:11px 14px;font-size:.95rem;font-family:'Inter',sans-serif;outline:none;text-align:center;letter-spacing:.1em;transition:border-color .15s;margin-bottom:12px}
+.login-input:focus{border-color:#0052cc}
+.login-input.error{border-color:#de350b;animation:shake .3s ease}
+.login-btn{width:100%;background:#0052cc;color:#fff;border:none;border-radius:6px;padding:12px;font-size:.95rem;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:all .15s;margin-bottom:10px}
+.login-btn:hover{background:#0041a3;transform:translateY(-1px)}
+.login-err{font-size:.78rem;color:#de350b;height:18px;transition:all .15s}
+.login-footer{font-size:.7rem;color:rgba(255,255,255,.6);margin-top:20px}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+header{background:#0052cc;color:#fff;padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.logo{font-size:1rem;font-weight:700}.header-sub{font-size:.75rem;opacity:.75;padding-left:12px;border-left:1px solid rgba(255,255,255,.3)}.header-left{display:flex;align-items:center;gap:12px}
+.btn{padding:6px 14px;border-radius:4px;font-family:'Inter',sans-serif;font-size:.82rem;font-weight:500;cursor:pointer;border:none;transition:all .15s}
+.btn-ghost{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}.btn-ghost:hover{background:rgba(255,255,255,.25)}
+.board-bar{background:#0041a3;padding:8px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.board-title{color:#fff;font-size:.9rem;font-weight:600}
+.stat-chip{background:rgba(255,255,255,.15);color:#fff;border-radius:12px;padding:3px 10px;font-size:.72rem;font-weight:500;display:flex;align-items:center;gap:5px}
+.stat-chip .dot{width:6px;height:6px;border-radius:50%}
+.kanban-scroll{padding:14px 14px 60px;display:flex;gap:10px;overflow-x:auto;align-items:flex-start;min-height:calc(100vh - 100px)}
+.kanban-scroll::-webkit-scrollbar{height:6px}.kanban-scroll::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:3px}
+.column{background:#ebecf0;border-radius:8px;width:270px;min-width:270px;display:flex;flex-direction:column;max-height:calc(100vh - 118px)}
+.col-header{padding:10px 12px 8px;display:flex;align-items:center;justify-content:space-between}
+.col-title-wrap{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
+.col-stripe{width:4px;height:18px;border-radius:2px;flex-shrink:0}
+.col-name{font-size:.8rem;font-weight:600;color:#172b4d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.col-badge{background:rgba(0,0,0,.12);color:#172b4d;border-radius:10px;padding:1px 7px;font-size:.7rem;font-weight:600;flex-shrink:0}
+.col-add{background:none;border:none;color:#6b778c;cursor:pointer;font-size:1rem;padding:2px 6px;border-radius:4px;transition:all .1s;line-height:1}
+.col-add:hover{background:rgba(0,0,0,.08);color:#172b4d}
+.col-cards{padding:0 8px 8px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:7px;padding-top:2px}
+.col-cards::-webkit-scrollbar{width:3px}.col-cards::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px}
+.card{background:#fff;border-radius:4px;padding:9px 11px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.1);transition:all .15s;border-left:3px solid transparent}
+.card:hover{box-shadow:0 4px 12px rgba(0,0,0,.18);transform:translateY(-1px)}
+.card-title{font-size:.83rem;font-weight:600;color:#172b4d;margin-bottom:3px;line-height:1.4}
+.card-effdate{font-size:.7rem;color:#0052cc;margin-bottom:4px;font-family:'DM Mono',monospace}
+.card-labels{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.card-label{font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:3px;color:#fff}
+.card-desc{font-size:.72rem;color:var(--muted);margin-bottom:5px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.card-footer{display:flex;align-items:center;gap:6px;margin-top:4px}
+.pbar{flex:1;height:4px;background:#e2e5ea;border-radius:2px;overflow:hidden}
+.pbar-fill{height:100%;border-radius:2px;transition:width .3s}
+.pbar-pct{font-size:.67rem;color:var(--muted);font-family:'DM Mono',monospace}
+.col-empty{text-align:center;padding:16px;color:#97a0af;font-size:.75rem}
+.overlay{position:fixed;inset:0;background:rgba(9,30,66,.54);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:30px 12px 20px;opacity:0;pointer-events:none;transition:opacity .2s;overflow-y:auto}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:6px;width:880px;max-width:100%;box-shadow:0 8px 40px rgba(9,30,66,.35);transform:translateY(-10px);transition:transform .2s}
+.overlay.open .modal{transform:translateY(0)}
+.modal-strip{height:6px;border-radius:6px 6px 0 0}
+.modal-body{padding:20px 22px 22px}
+.modal-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.modal-title-wrap{flex:1;min-width:0}
+.mtitle-display{font-size:1.05rem;font-weight:700;color:#172b4d;line-height:1.4;cursor:pointer;padding:3px 6px;border-radius:4px;margin:-3px -6px;word-break:break-word}
+.mtitle-display:hover{background:#f4f5f7}
+.mtitle-edit{font-size:1rem;font-weight:700;color:#172b4d;width:100%;border:2px solid var(--accent);border-radius:4px;padding:5px 8px;font-family:'Inter',sans-serif;outline:none;display:none;resize:vertical;min-height:52px}
+.modal-stage{font-size:.76rem;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:5px}
+.close-x{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:4px;flex-shrink:0}
+.close-x:hover{background:#f4f5f7;color:var(--text)}
+.modal-grid{display:grid;grid-template-columns:1fr 190px;gap:18px}
+.lmgr-row{display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;border-bottom:1px solid var(--border)}
+.lmgr-row:last-child{border-bottom:none}.lmgr-row:hover{background:#f8f9fa}
+.lmgr-check{width:17px;height:17px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.lmgr-swatch{width:26px;height:22px;border-radius:4px;border:2px solid rgba(0,0,0,.15);cursor:pointer;flex-shrink:0}
+.lmgr-name{flex:1;border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:.8rem;font-family:'Inter',sans-serif;outline:none}
+.lmgr-name:focus{border-color:var(--accent)}
+.lmgr-del{background:none;border:none;color:#de350b;cursor:pointer;font-size:.85rem;padding:2px 5px;border-radius:3px}
+.lmgr-del:hover{background:#ffecea}
+.lmgr-hint{font-size:.72rem;color:var(--muted);padding:4px 6px 6px}
+.eff-date-row{display:flex;align-items:center;gap:8px;padding:7px 10px;background:#f4f5f7;border-radius:6px;margin-bottom:12px}
+.eff-date-row label{font-size:.75rem;font-weight:600;color:var(--muted);white-space:nowrap}
+.desc-section{margin-bottom:14px}
+.desc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.desc-header-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.desc-edit-btn{font-size:.72rem;background:#f4f5f7;border:none;border-radius:4px;padding:3px 8px;cursor:pointer;color:var(--muted)}
+.desc-edit-btn:hover{background:var(--border);color:var(--text)}
+.desc-display{font-size:.83rem;color:var(--text);line-height:1.6;white-space:pre-wrap;min-height:36px;padding:6px 8px;background:#f4f5f7;border-radius:5px;cursor:text;border:1px solid transparent}
+.desc-display.empty{color:var(--muted);font-style:italic}.desc-display:hover{border-color:var(--border)}
+.desc-textarea{width:100%;min-height:90px;border:2px solid var(--accent);border-radius:5px;padding:7px 9px;font-family:'Inter',sans-serif;font-size:.83rem;color:var(--text);outline:none;resize:vertical;display:none;background:#fff}
+.detail-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:5px}
+.sidebar-section{margin-bottom:14px}
+.form-input,.form-select,.form-textarea{width:100%;border:2px solid var(--border);border-radius:4px;padding:6px 9px;font-family:'Inter',sans-serif;font-size:.82rem;color:var(--text);outline:none;background:var(--surface);transition:border-color .15s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--accent)}
+.form-textarea{resize:vertical;min-height:60px}
+.modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.cl-section-block{border:1px solid var(--border);border-radius:6px;margin-bottom:10px;overflow:hidden}
+.cl-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:#f4f5f7;cursor:pointer;user-select:none;gap:8px}
+.cl-section-hdr:hover{background:#ebecf0}
+.cl-sec-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--accent);flex:1}
+.cl-sec-meta{font-size:.7rem;color:var(--muted);font-family:'DM Mono',monospace;white-space:nowrap}
+.cl-sec-toggle{font-size:.7rem;color:var(--muted);background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.cl-sec-toggle:hover{background:var(--border)}
+.cl-sec-body{padding:4px 4px 6px}.cl-sec-body.hidden{display:none}
+.cl-section-pbar{height:3px;background:var(--border)}
+.cl-section-pfill{height:100%;background:var(--green);transition:width .3s}
+.cl-row{display:flex;align-items:flex-start;gap:7px;padding:5px 7px;border-radius:4px;margin-bottom:2px;border:1px solid transparent;transition:background .1s}
+.cl-row:hover{background:#f4f5f7}.cl-row.done-row{opacity:.5}
+.cl-row.locked{opacity:.3;pointer-events:none}
+.cl-chk{width:15px;height:15px;margin-top:2px;accent-color:var(--green);cursor:pointer;flex-shrink:0}
+.cl-content{flex:1;min-width:0}
+.cl-lbl{font-size:.82rem;line-height:1.4;color:var(--text)}
+.cl-lbl.struck{text-decoration:line-through;color:var(--muted)}
+.cl-lbl-edit{width:100%;border:2px solid var(--accent);border-radius:4px;padding:2px 6px;font-size:.82rem;font-family:'Inter',sans-serif;outline:none;display:none}
+.cl-fields{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;margin-top:5px;flex-direction:column}
+.cl-fields-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.cl-date{border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:.74rem;font-family:'DM Mono',monospace;color:var(--text);background:#fff;outline:none;width:120px;letter-spacing:.04em}
+.cl-date:focus{border-color:var(--accent)}
+.cl-date::placeholder{color:#bbb;letter-spacing:0;font-family:'Inter',sans-serif;font-size:.72rem}
+.cl-text{border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:.74rem;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;transition:border-color .15s;min-width:110px}
+.cl-text:focus{border-color:var(--accent)}
+.cl-sel{border:1px solid var(--border);border-radius:4px;padding:3px 7px;font-size:.74rem;font-family:'Inter',sans-serif;color:var(--text);background:#fff;outline:none;cursor:pointer}
+.fld-lbl{font-size:.69rem;color:var(--muted);white-space:nowrap}
+.fld-grp{display:flex;align-items:center;gap:4px}
+.radios{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.rlbl{display:flex;align-items:center;gap:4px;font-size:.78rem;cursor:pointer;white-space:nowrap;user-select:none}
+.rlbl input[type=radio]{cursor:pointer;accent-color:var(--accent)}
+.subchecks{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.sclbl{display:flex;align-items:center;gap:4px;font-size:.78rem;cursor:pointer}
+.sclbl input[type=checkbox]{width:14px;height:14px;accent-color:var(--green);cursor:pointer}
+.cond-sub{margin-left:22px;border-left:2px solid var(--border);padding-left:10px;margin-top:2px}
+.cond-sub.off{opacity:.35;pointer-events:none}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.fpbar{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:12px}
+.fpbar-fill{height:100%;border-radius:3px;background:var(--green);transition:width .3s}
+.drag-handle{color:#ccc;cursor:grab;font-size:.9rem;padding:0 3px;flex-shrink:0;margin-top:2px;user-select:none}
+.drag-handle:hover{color:#888}
+.cl-row.dragging{opacity:.4;background:#e8f0fe!important}
+.cl-row.drag-over{border-top:2px solid var(--accent)!important}
+.add-item-row{display:flex;gap:6px;padding:4px 8px;margin-top:4px}
+.add-item-input{flex:1;border:1px dashed var(--border);border-radius:4px;padding:4px 8px;font-size:.78rem;font-family:'Inter',sans-serif;outline:none;background:#fafafa}
+.add-item-input:focus{border-color:var(--accent);background:#fff}
+.add-item-btn{background:var(--accent);color:#fff;border:none;border-radius:4px;padding:4px 10px;font-size:.75rem;cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-group{margin-bottom:13px}
+.form-label{display:block;font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:5px}
+.toast{position:fixed;bottom:20px;right:20px;background:#172b4d;color:#fff;border-radius:5px;padding:10px 16px;font-size:.82rem;z-index:999;transform:translateY(60px);opacity:0;transition:all .25s;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.toast.show{transform:translateY(0);opacity:1}
+@media(max-width:640px){.modal-grid{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-logo">🏝</div>
+    <div class="login-title">HWY-SP Recruitment</div>
+    <div class="login-sub">Hawaii Department of Transportation<br>Highways Division HR</div>
+    <input type="password" class="login-input" id="login-input" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
+    <div class="login-err" id="login-err"></div>
+  </div>
+  <div class="login-footer">HWY-SP Recruitment Dashboard &nbsp;·&nbsp; HDOT Highways Division</div>
+</div>
+
+<!-- MAIN APP (hidden until login) -->
+<div id="app" style="display:none">
+  <div class="header-left">
+    <div class="logo">&#127965; HWY-SP Recruitment</div>
+    <div class="header-sub">Hawaii Department of Transportation &ndash; Highways</div>
+  </div>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button class="btn btn-ghost" onclick="openClMgr()" title="Checklist Builder">&#9745; Checklists</button>
+    <button class="btn btn-ghost" onclick="importData()">&#8679; Import</button>
+    <button class="btn btn-ghost" onclick="exportData()">&#8681; Export</button>
+    <button class="btn btn-ghost" onclick="changePassword()" title="Change Password">&#128274; Password</button>
+    <button class="btn btn-ghost" onclick="logout()" title="Log out" style="opacity:.8">&#9099; Logout</button>
+    <button class="btn btn-ghost" onclick="openAddModal()" style="background:rgba(255,255,255,.25)">+ Add Card</button>
+  </div>
+</header>
+<div class="board-bar">
+  <span class="board-title">HWY-SP Recruitment | Hawaii Department of Transportation &ndash; Highways</span>
+  <div id="metaStats" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+</div>
+<div class="kanban-scroll" id="kanban"></div>
+<div class="toast" id="toast"></div>
+
+<!-- DETAIL MODAL -->
+<div class="overlay" id="detailOverlay"><div class="modal" id="detailModal"></div></div>
+
+<!-- LABEL MANAGER -->
+<div class="overlay" id="lblMgrOverlay">
+  <div class="modal" style="max-width:440px">
+    <div class="modal-strip" style="background:#0052cc"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div><div class="mtitle-display" style="cursor:default;font-size:.95rem">&#127991; Labels</div>
+        <div class="modal-stage">&#9745; Check = apply to card &middot; Edit &middot; Delete</div></div>
+        <button class="close-x" onclick="closeModal('lblMgrOverlay')">&#10005;</button>
+      </div>
+      <div id="lmgr-list" style="margin-bottom:14px"></div>
+      <div style="display:flex;gap:8px;align-items:center;padding:8px 4px;border-top:1px solid var(--border)">
+        <input type="color" id="lmgr-new-color" value="#0052cc" style="width:36px;height:30px;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:2px">
+        <input type="text" id="lmgr-new-name" class="form-input" placeholder="New label name" style="flex:1">
+        <button class="btn" style="background:#0052cc;color:#fff;white-space:nowrap" onclick="addLabel()">+ Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CHECKLIST BUILDER MODAL -->
+<div class="overlay" id="clMgrOverlay">
+  <div class="modal" style="max-width:860px;width:95vw">
+    <div class="modal-strip" style="background:#00875a"></div>
+    <div class="modal-body" style="padding:18px 20px">
+
+      <!-- TOP BAR: list selector + actions -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="font-size:.95rem;font-weight:700;color:#172b4d;white-space:nowrap">&#9745; Checklist Builder</div>
+        <select id="clb-selector" class="form-select" style="flex:1;min-width:160px;max-width:260px" onchange="clbSwitch()"></select>
+        <button class="btn" style="background:#00875a;color:#fff;white-space:nowrap" onclick="clbNew()">+ New Checklist</button>
+        <button class="btn" style="background:#f4f5f7;color:#172b4d;border:1px solid var(--border);white-space:nowrap" onclick="clbRename()">&#9998; Rename</button>
+        <button class="btn" style="background:#ffecea;color:#de350b;border:1px solid #ffd2cc;white-space:nowrap" onclick="clbDelete()">&#10005; Delete</button>
+        <button class="close-x" onclick="closeModal('clMgrOverlay')" style="margin-left:auto">&#10005;</button>
+      </div>
+
+      <!-- TWO-PANE LAYOUT -->
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:14px;align-items:start">
+
+        <!-- LEFT: section list -->
+        <div>
+          <div style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px">Sections</div>
+          <div id="clb-sec-list" style="border:1px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:8px"></div>
+          <div style="display:flex;gap:6px">
+            <input type="text" id="clb-new-sec" class="form-input" placeholder="Section name..." style="flex:1;font-size:.78rem">
+            <button class="btn" style="background:#0052cc;color:#fff;padding:5px 10px;font-size:.75rem" onclick="clbAddSection()">+</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: items for selected section -->
+        <div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+            <div id="clb-sec-title" style="font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)">Select a section</div>
+            <button class="btn" style="background:#00875a;color:#fff;padding:4px 10px;font-size:.75rem" onclick="clbAddItem()">+ Add Item</button>
+          </div>
+          <div id="clb-item-list" style="border:1px solid var(--border);border-radius:6px;overflow:hidden;min-height:80px;max-height:52vh;overflow-y:auto">
+            <div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Select a section on the left</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;font-size:.72rem;color:var(--muted)">
+        &#8661; Drag to reorder &nbsp;&middot;&nbsp; Each item can have: Checkbox, Date picker, Text box, Radio buttons, Dropdown, or Number &nbsp;&middot;&nbsp; Sub-items nest under any item
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ITEM EDITOR MODAL -->
+<div class="overlay" id="itemEditOverlay" style="z-index:300">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-strip" style="background:#0052cc"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div><div class="mtitle-display" style="cursor:default;font-size:.9rem" id="ie-title">Edit Item</div></div>
+        <button class="close-x" onclick="closeModal('itemEditOverlay')">&#10005;</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Item Label</label>
+        <input class="form-input" id="ie-label" placeholder="e.g. Conditional Job Offer">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Field Type</label>
+        <select class="form-select" id="ie-type" onchange="ieTypeChange()">
+          <option value="check">&#9745; Checkbox only</option>
+          <option value="date">&#128197; Checkbox + Date picker</option>
+          <option value="text">&#9999; Checkbox + Text box</option>
+          <option value="radio">&#11096; Checkbox + Radio buttons</option>
+          <option value="dropdown">&#9660; Checkbox + Dropdown</option>
+          <option value="number">&#8470; Checkbox + Number</option>
+          <option value="multi">&#128203; Checkbox + Multiple fields</option>
+        </select>
+      </div>
+
+      <!-- Field label -->
+      <div class="form-group" id="ie-fieldlabel-wrap">
+        <label class="form-label">Field Label <span style="color:var(--muted);font-weight:400;text-transform:none">(shown next to input)</span></label>
+        <input class="form-input" id="ie-fieldlabel" placeholder="e.g. Date:, Specify:, Notes:">
+      </div>
+
+      <!-- Radio / Dropdown options -->
+      <div class="form-group" id="ie-options-wrap" style="display:none">
+        <label class="form-label">Options <span style="color:var(--muted);font-weight:400;text-transform:none">(one per line)</span></label>
+        <textarea class="form-textarea" id="ie-options" rows="4" placeholder="Option 1&#10;Option 2&#10;Option 3"></textarea>
+      </div>
+
+      <!-- Multi-field builder -->
+      <div class="form-group" id="ie-multi-wrap" style="display:none">
+        <label class="form-label">Multiple Fields</label>
+        <div id="ie-multi-list" style="border:1px solid var(--border);border-radius:5px;margin-bottom:8px;min-height:40px"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <input type="text" id="ie-multi-lbl" class="form-input" placeholder="Field label..." style="flex:1;min-width:100px">
+          <select class="form-select" id="ie-multi-type" style="width:120px">
+            <option value="date">Date</option>
+            <option value="text">Text</option>
+            <option value="radio">Radio</option>
+            <option value="number">Number</option>
+          </select>
+          <button class="btn" style="background:#0052cc;color:#fff;padding:5px 10px" onclick="ieAddMultiField()">+ Field</button>
+        </div>
+      </div>
+
+      <!-- Sub-items -->
+      <div class="form-group">
+        <label class="form-label" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" id="ie-has-subitems" onchange="ieSubChange()" style="accent-color:#0052cc">
+          Has sub-items (nested checkboxes)
+        </label>
+        <div id="ie-subitems-wrap" style="display:none;margin-top:8px">
+          <div id="ie-subitem-list" style="border:1px solid var(--border);border-radius:5px;margin-bottom:6px;min-height:30px"></div>
+          <div style="display:flex;gap:6px">
+            <input type="text" id="ie-new-subitem" class="form-input" placeholder="Sub-item label..." style="flex:1" onkeydown="if(event.key==='Enter')ieAddSubItem()">
+            <button class="btn" style="background:#00875a;color:#fff;padding:5px 10px" onclick="ieAddSubItem()">+ Add</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn" style="background:#f4f5f7;color:#172b4d" onclick="closeModal('itemEditOverlay')">Cancel</button>
+        <button class="btn" style="background:#0052cc;color:#fff" onclick="ieSave()">Save Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CARD MODAL -->
+<div class="overlay" id="addOverlay">
+  <div class="modal" style="max-width:540px">
+    <div class="modal-strip" style="background:#0052cc"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div><div class="mtitle-display" style="cursor:default">Add New Selection Card</div></div>
+        <button class="close-x" onclick="closeModal('addOverlay')">&#10005;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Card Title (Position / Req#)</label>
+        <input class="form-input" id="add-title" placeholder="e.g. 10452 Office Assistant IV SR10 Req# 2401003">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Recommendation</label>
+        <div style="display:flex;gap:16px;align-items:center;padding:8px 10px;background:#f4f5f7;border-radius:6px">
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer;font-weight:600;color:#00875a">
+            <input type="radio" name="add-rec" id="add-rec-yes" value="rec" checked onchange="handleAddRec('rec')" style="accent-color:#00875a"> &#9989; Recommended
+          </label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:.85rem;cursor:pointer;font-weight:600;color:#de350b">
+            <input type="radio" name="add-rec" id="add-rec-no" value="nonrec" onchange="handleAddRec('nonrec')" style="accent-color:#de350b"> &#10060; Not Recommended
+          </label>
+        </div>
+        <div id="add-nonrec-note" style="display:none;margin-top:6px;padding:6px 10px;background:#ffecea;border-radius:4px;font-size:.76rem;color:#bf2600;font-weight:500">
+          &#9888; Card will be labeled "Not Recommended" and moved to <strong>Non-Selection</strong> stage.
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Effective Date</label>
+          <input class="form-input" type="date" id="add-effdate" style="cursor:pointer">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Stage</label>
+          <select class="form-select" id="add-stage"></select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">HR Staff Assigned</label>
+        <input class="form-input" id="add-hr" placeholder="e.g. Lester M.">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Checklist Template</label>
+        <select class="form-select" id="add-checklist">
+          <option value="__default__">HWY-SP Standard (Default)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Labels</label>
+        <div id="add-label-picker" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:2px"></div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
+        <button class="btn" style="background:#f4f5f7;color:#172b4d" onclick="closeModal('addOverlay')">Cancel</button>
+        <button class="btn" style="background:#0052cc;color:#fff" onclick="saveCard()">Add Card</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE MANAGER MODAL -->
+<div class="overlay" id="stageMgrOverlay">
+  <div class="modal" style="max-width:500px">
+    <div class="modal-strip" style="background:#172b4d"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div>
+          <div class="mtitle-display" style="cursor:default;font-size:.95rem">&#9881; Manage Stages</div>
+          <div class="modal-stage">Add, rename, recolor, reorder, or delete stages</div>
+        </div>
+        <button class="close-x" onclick="closeModal('stageMgrOverlay')">&#10005;</button>
+      </div>
+      <!-- Existing stages list -->
+      <div id="stage-list" style="max-height:55vh;overflow-y:auto;margin-bottom:14px"></div>
+      <!-- Add new stage -->
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div style="font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px">Add New Stage</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="color" id="stage-new-color" value="#0052cc" style="width:36px;height:32px;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:2px;flex-shrink:0">
+          <input type="text" id="stage-new-name" class="form-input" placeholder="Stage name..." style="flex:1">
+          <button class="btn" style="background:#172b4d;color:#fff;white-space:nowrap" onclick="addStage()">+ Add</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;font-size:.72rem;color:var(--muted)">Drag &#8661; to reorder &nbsp;&middot;&nbsp; Edit name/color inline &nbsp;&middot;&nbsp; &#10005; to delete (cards stay, moved to Notes)</div>
+    </div>
+  </div>
+</div>
+
+<!-- STAGE EDIT MODAL (quick edit for single stage) -->
+<div class="overlay" id="stageEditOverlay">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-strip" id="stage-edit-strip" style="background:#0052cc"></div>
+    <div class="modal-body">
+      <div class="modal-header">
+        <div><div class="mtitle-display" style="cursor:default;font-size:.95rem" id="stage-edit-title">Edit Stage</div></div>
+        <button class="close-x" onclick="closeModal('stageEditOverlay')">&#10005;</button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Stage Name</label>
+        <input class="form-input" id="stage-edit-name" placeholder="Stage name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Color</label>
+        <input type="color" id="stage-edit-color" style="width:60px;height:36px;border:1px solid var(--border);border-radius:4px;cursor:pointer;padding:2px">
+      </div>
+      <div style="display:flex;gap:8px;justify-content:space-between;margin-top:4px">
+        <button style="background:#ffecea;color:#de350b;border:none;border-radius:4px;padding:6px 12px;font-size:.8rem;font-weight:500;cursor:pointer" onclick="deleteStage()">Delete Stage</button>
+        <div style="display:flex;gap:8px">
+          <button class="btn" style="background:#f4f5f7;color:#172b4d" onclick="closeModal('stageEditOverlay')">Cancel</button>
+          <button class="btn" style="background:#0052cc;color:#fff" onclick="saveStageEdit()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── LABELS ────────────────────────────────────────────────────────────
+let LABELS = [
+  {id:'hwy',name:'HWY',color:'#1a7340'},{id:'hwym',name:'HWY-M',color:'#d47b00'},
+  {id:'hwyc',name:'HWY-C',color:'#b22222'},{id:'hwyo',name:'HWY-O',color:'#4a6c1a'},
+  {id:'ext',name:'External',color:'#5ba02e'},{id:'int',name:'Internal',color:'#c06cc2'},
+  {id:'dis',name:'Discharge',color:'#6b778c'},{id:'res',name:'Resignation',color:'#8a8a8a'},
+  {id:'nonrec',name:'Not Recommended',color:'#505f79'},
+  {id:'rejcond',name:'Rejected \u2013 Conditional Offer',color:'#bf2600'},
+  {id:'rejjob',name:'Rejected \u2013 Job Offer',color:'#7d0000'},
+];
+
+// ── COLUMNS ───────────────────────────────────────────────────────────
+let COLUMNS=[
+  {id:'sel',name:'Selection Package',color:'#0052cc'},
+  {id:'noa',name:'NOA',color:'#6554c0'},
+  {id:'onboard',name:'Onboarding',color:'#00875a'},
+  {id:'pas',name:'PAS',color:'#0065ff'},
+  {id:'sharepoint',name:'Upload to SharePoint',color:'#ff991f'},
+  {id:'intra',name:'Intra-Dept \u2013 Pending OPF',color:'#bf2600'},
+  {id:'rename',name:'File Renaming',color:'#403294'},
+  {id:'complete',name:'Completed',color:'#00875a'},
+  {id:'other',name:'Filed by Other HRA',color:'#97a0af'},
+  {id:'cancel',name:'Cancelled Recruitment',color:'#de350b'},
+  {id:'nonsel',name:'Non-Selection',color:'#505f79'},
+  {id:'notes',name:'Notes',color:'#0747a6'},
+];
+
+// ── MASTER CHECKLIST TEMPLATE ─────────────────────────────────────────
+let CL_TEMPLATE=[
+  {id:'s_branch',title:'Selection Package (Completed by Branch/District)',items:[
+    {id:'t_wikiwiki',label:'Wiki Wiki checklist'},
+    {id:'t_deteval2',label:'Completed Detail Evaluation Report'},
+    {id:'t_ratingsheet2',label:'Completed Interview Rating Sheet'},
+    {id:'t_iqanswers2',label:'Completed Interview Questions and Answers'},
+    {id:'t_nonrec_memo',label:'Recommendation/Non-Recommendation Memo'},
+    {id:'t_wwlist',label:'Wiki Wiki DHRD list w/applicant\'s name'},
+    {id:'t_wwapps',label:'Wiki Wiki DHRD application(s) of each applicant interviewed'},
+    {id:'t_lic',label:'Required Licenses',special:'licenses'},
+    {id:'t_selcert',label:'Selective Certification Requirement(s)',special:'selcert'},
+    {id:'t_hrd380',label:'HRD 380 (Act 179) form'},
+    {id:'t_prevauth',label:'Previous Employer Authorization Form'},
+    {id:'t_prevchecks',label:'Previous Employer Check(s)',special:'prevchecks'},
+    {id:'t_cleanset',label:'Clean Set of Interview Material',special:'cleanset'},
+  ]},
+  {id:'s_hwysp',title:'HWY-SP Use Only',items:[
+    {id:'t_condoffer',label:'Conditional Job Offer',special:'condoffer'},
+    {id:'t_neogovroa',label:'NEOGOV ROA (Process Hire action for selectee only)'},
+    {id:'t_dhrdclear',label:'DHRD Initial Clearance Email',special:'dhrdclear'},
+    {id:'t_329c',label:'329c',special:'329c'},
+    {id:'t_preemp',label:'Pre-employment checks',special:'preemp'},
+    {id:'t_suit',label:'Suitability Investigation Required',special:'suitability'},
+    {id:'t_finaloffer',label:'Final Offer Email to Program',special:'finaloffer'},
+    {id:'t_hrd1',label:'Reallocation HRD-1 required',special:'hrd1'},
+    {id:'t_postings',label:'Postings',special:'postings'},
+    {id:'t_noa',label:'Notice of Appt (NOA)',special:'datebox',dataKey:'noa_date'},
+    {id:'t_nonsel',label:'Non-selection letters',special:'datebox',dataKey:'nonsel_date'},
+    {id:'t_neogov',label:'NEOGOV Onboarding',special:'neogov'},
+    {id:'t_ers',label:'Date ERS Code Requested',special:'datebox',dataKey:'ers_date'},
+    {id:'t_igm',label:'Request IGM',special:'igm'},
+  ]},
+  {id:'s_epar',title:'EPAR & File Actions',items:[
+    {id:'t_epardraft',label:'EPAR Draft'},{id:'t_epartransfer',label:'Request EPAR Transfer'},
+    {id:'t_perform',label:'Perform Hire Action'},{id:'t_print',label:'Print Personnel Action'},
+    {id:'t_i9',label:'File I-9'},{id:'t_hrms',label:'Enter and Print Hire Action on HRMS'},
+    {id:'t_epardist',label:'Send EPAR to District'},{id:'t_eparpay',label:'Send EPAR to Payroll'},
+    {id:'t_hip',label:'HIP Onboarding Letter'},
+    {id:'t_renrec',label:'Rename Files and Upload to Recruitment SharePoint'},
+    {id:'t_rensp',label:'Rename Files and Upload to SharePoint'},
+    {id:'t_bgepf',label:'Upload Background Checks to EPF'},
+    {id:'t_onbopf',label:'Upload Onboarding files to OPF'},
+    {id:'t_eparopf',label:'Upload EPAR to OPF'},
+  ]},
+  {id:'s_onboard',title:'Onboarding',items:[
+    {id:'t_onbtype',label:'Hire Type',special:'onbtype'},
+  ]},
+];
+
+// Items locked when conditional offer rejected
+const AFTER_COND=['t_neogovroa','t_dhrdclear','t_329c','t_preemp','t_suit','t_finaloffer','t_hrd1','t_postings','t_noa','t_nonsel','t_neogov','t_ers','t_igm','t_epardraft','t_epartransfer','t_perform','t_print','t_i9','t_hrms','t_epardist','t_eparpay','t_hip','t_renrec','t_rensp','t_bgepf','t_onbopf','t_eparopf','t_onbtype'];
+const AFTER_FINAL=['t_hrd1','t_postings','t_noa','t_nonsel','t_neogov','t_ers','t_igm','t_epardraft','t_epartransfer','t_perform','t_print','t_i9','t_hrms','t_epardist','t_eparpay','t_hip','t_renrec','t_rensp','t_bgepf','t_onbopf','t_eparopf','t_onbtype'];
+
+// ── CARDS ─────────────────────────────────────────────────────────────
+let cards=[
+  {id:'c1',colId:'sel',title:'10452 Office Assistant IV SR10 3 Constr & Maint Br Req# 2401003',hr:'Lester M.',labels:['hwyc','ext'],effdate:'',description:'',data:{},customItems:[]},
+  {id:'c2',colId:'sel',title:'2663 Welder I BC10 1 Oahu Dist Maintenance Section Req# 2401446 - Frank Gonzales',hr:'Lester M.',labels:['hwyo','ext'],effdate:'07/16/2025',description:'DHRD Cert dtd 02/04/2025',data:{t_wikiwiki:true},customItems:[]},
+];
+
+function allProgIds(card){
+  const ids=[];
+  CL_TEMPLATE.forEach(sec=>sec.items.forEach(it=>{
+    ids.push(it.id);
+    // cleanset has 6 sub-checkboxes
+    if(it.special==='cleanset') ids.push('t_clean1','t_clean2','t_clean3','t_clean4','t_clean5','t_clean6');
+  }));
+  (card.customItems||[]).forEach(it=>ids.push(it.id));
+  return ids;
+}
+function countProg(card){return allProgIds(card).filter(id=>card.data[id]).length;}
+function totalProg(card){return allProgIds(card).length;}
+
+let activeCardId=null,collapsedSections={};
+
+// ── RENDER BOARD ──────────────────────────────────────────────────────
+function render(){
+  const kb=document.getElementById('kanban');kb.innerHTML='';
+  COLUMNS.forEach(col=>{
+    const cc=cards.filter(c=>c.colId===col.id);
+    const el=document.createElement('div');el.className='column';
+    el.innerHTML='<div class="col-header"><div class="col-title-wrap"><div class="col-stripe" style="background:'+col.color+'"></div><div class="col-name" title="'+col.name+'">'+col.name+'</div><div class="col-badge">'+cc.length+'</div></div>'+
+      '<div style="display:flex;gap:3px">'+
+        '<button class="col-add" title="Edit stage" onclick="event.stopPropagation();openStageEdit(\''+col.id+'\')">&#9881;</button>'+
+        '<button class="col-add" onclick="openAddModal(\''+col.id+'\')">+</button>'+
+      '</div>'+
+      '</div><div class="col-cards">'+(cc.length===0?'<div class="col-empty">No cards</div>':cc.map(c=>cardHTML(c,col)).join(''))+'</div>';
+    kb.appendChild(el);
+  });
+  renderMeta();
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function effDateStyle(card){
+  if(!card.effdate) return null;
+  // Parse MM/DD/YYYY
+  const parts=card.effdate.split('/');
+  if(parts.length!==3) return null;
+  const eff=new Date(parseInt(parts[2]),parseInt(parts[0])-1,parseInt(parts[1]));
+  if(isNaN(eff.getTime())) return null;
+  const now=new Date(); now.setHours(0,0,0,0); eff.setHours(0,0,0,0);
+  const diff=Math.round((eff-now)/(1000*60*60*24)); // days until eff date
+  const done=countProg(card),total=totalProg(card),pct=total?Math.round(done/total*100):0;
+  const isComplete=card.colId==='complete'||pct===100;
+  if(isComplete) return {bg:'#00875a',color:'#fff',label:'Eff: '+card.effdate}; // green
+  if(diff<0) return {bg:'#6d0000',color:'#fff',label:'Overdue: '+card.effdate}; // dark red — past due, not complete
+  if(diff===0) return {bg:'#de350b',color:'#fff',label:'Today: '+card.effdate}; // red — due today
+  if(diff<=3) return {bg:'#ff991f',color:'#fff',label:'Soon: '+card.effdate}; // orange — within 3 days
+  return {bg:'#e8f0fe',color:'#0052cc',label:'Eff: '+card.effdate}; // default blue
+}
+function cardHTML(card,col){
+  const done=countProg(card),total=totalProg(card),pct=total?Math.round(done/total*100):0;
+  const pc=pct===100?'#00875a':(pct>=50?'#0052cc':'#97a0af');
+  const lbls=card.labels.map(lid=>{const l=LABELS.find(x=>x.id===lid);return l?'<span class="card-label" style="background:'+l.color+'">'+esc(l.name)+'</span>':''}).join('');
+  const eds=card.effdate?effDateStyle(card):null;
+  const effHTML=eds?'<div style="display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:12px;margin-bottom:5px;background:'+eds.bg+';color:'+eds.color+'">&#128197; '+eds.label+'</div>':'';
+  return '<div class="card" style="border-left-color:'+col.color+'" onclick="openDetail(\''+card.id+'\')">'+(lbls?'<div class="card-labels">'+lbls+'</div>':'')+
+    '<div class="card-title">'+esc(card.title)+'</div>'+
+    effHTML+
+    (card.description?'<div class="card-desc">'+esc(card.description)+'</div>':'')+
+    (card.hr?'<div style="font-size:.7rem;color:var(--muted);margin-bottom:4px">&#128100; '+esc(card.hr)+'</div>':'')+
+    '<div class="card-footer"><div class="pbar"><div class="pbar-fill" style="width:'+pct+'%;background:'+pc+'"></div></div><div class="pbar-pct">'+done+'/'+total+'</div></div></div>';
+}
+function renderMeta(){
+  const t=cards.length,comp=cards.filter(c=>c.colId==='complete').length,inp=cards.filter(c=>!['complete','cancel','nonsel','other'].includes(c.colId)).length,can=cards.filter(c=>c.colId==='cancel').length;
+  document.getElementById('metaStats').innerHTML='<div class="stat-chip"><div class="dot" style="background:#fff"></div>'+t+' Total</div><div class="stat-chip"><div class="dot" style="background:#00875a"></div>'+comp+' Completed</div><div class="stat-chip"><div class="dot" style="background:#ff991f"></div>'+inp+' In Progress</div><div class="stat-chip"><div class="dot" style="background:#de350b"></div>'+can+' Cancelled</div>';
+}
+
+// ── DETAIL MODAL ──────────────────────────────────────────────────────
+function openDetail(cardId){activeCardId=cardId;collapsedSections={};buildDetail();openModal('detailOverlay');}
+
+function buildDetail(){
+  const card=cards.find(c=>c.id===activeCardId);
+  const col=COLUMNS.find(c=>c.id===card.colId);
+  const d=card.data;
+  const done=countProg(card),total=totalProg(card),pct=total?Math.round(done/total*100):0;
+  const condRej=d.cond_acc==='rejected',jobDec=d.final_offer_outcome==='declined',onbNew=d.onboarding_type==='new',suitYes=d.suitability_req==='yes',hrd1Yes=d.hrd1_req==='yes';
+  const stageOpts=COLUMNS.map(c=>'<option value="'+c.id+'"'+(c.id===card.colId?' selected':'')+'>'+esc(c.name)+'</option>').join('');
+
+  function dbox(key){
+    // Convert stored MM/DD/YYYY to YYYY-MM-DD for date input, and back on change
+    const raw=d[key]||'';
+    let isoVal='';
+    if(raw){const p=raw.split('/');if(p.length===3&&p[2].length===4)isoVal=p[2]+'-'+p[0].padStart(2,'0')+'-'+p[1].padStart(2,'0');}
+    return '<input type="date" class="cl-date" value="'+isoVal+'" onchange="saveDateField(\''+key+'\',this.value)" style="width:150px;cursor:pointer">';
+  }
+  function fgrp(lbl,inner){return '<div class="fld-grp"><span class="fld-lbl">'+lbl+'</span>'+inner+'</div>';}
+  function tbox(key,lbl,ph){return fgrp(lbl,'<input type="text" class="cl-text" placeholder="'+(ph||'')+'" value="'+esc(d[key]||'')+'" onchange="saveData(\''+key+'\',this.value)">');}
+  function scb(key,lbl){return '<label class="sclbl"><input type="checkbox"'+(d[key]?' checked':'')+' onchange="saveData(\''+key+'\',this.checked);refreshProg()">'+lbl+'</label>';}
+  // Clearable radio: clicking same value deselects
+  function crad(name,val,lbl,cur,fn){
+    return '<label class="rlbl" onclick="event.preventDefault();crClick(\''+name+'\',\''+val+'\',\''+fn+'\')">'+'<input type="radio" name="'+name+'" value="'+val+'"'+(cur===val?' checked':'')+' style="pointer-events:none">'+lbl+'</label>';
+  }
+
+  function buildItemHTML(it,secId,idx,isCustom){
+    const fid=it.id,chk=!!d[fid],locked=(condRej&&AFTER_COND.includes(fid))||(jobDec&&AFTER_FINAL.includes(fid));
+    let extra='';
+    if(it.special==='licenses') extra='<div class="cl-fields-row">'+scb('lic_driver','Driver\'s License')+scb('lic_pe','PE License')+scb('lic_other','Other')+'</div>';
+    else if(it.special==='selcert') extra=tbox('sel_cert_text','Specify:','e.g. Lifting/Carrying');
+    else if(it.special==='prevchecks') extra=fgrp('No. of checks:','<select class="cl-sel" onchange="saveData(\'prev_checks_num\',this.value)"><option value="">&#8212;</option>'+[1,2,3,4,5,6,7,8,9,10].map(n=>'<option value="'+n+'"'+(d.prev_checks_num==n?' selected':'')+'>'+n+'</option>').join('')+'</select>');
+    else if(it.special==='cleanset') extra=
+      '<div style="margin-top:4px">'+
+        sRow('t_clean1','1. Evaluation Criteria Sheet','')+
+        sRow('t_clean2','2. Rating Standards','')+
+        sRow('t_clean3','3. Interview Rating Sheets','')+
+        sRow('t_clean4','4. Q & A\'s','')+
+        sRow('t_clean5','5. Written exams or the like','')+
+        sRow('t_clean6','6. Detailed Evaluation Report','')+
+      '</div>';
+    else if(it.special==='condoffer'){
+      extra='<div class="cl-fields-row">'+fgrp('Date emailed:',dbox('cond_emailed'))+'</div>'+
+        '<div class="cl-fields-row" style="margin-top:4px"><div class="radios">'+crad('cond_acc_'+activeCardId,'accepted','&#9989; Accepted',d.cond_acc,'doCondOutcome')+crad('cond_acc_'+activeCardId,'rejected','&#10060; Rejected',d.cond_acc,'doCondOutcome')+'</div></div>'+
+        '<div class="cl-fields-row" style="margin-top:4px">'+fgrp('Date accepted/rejected:',dbox('cond_acc_date'))+'</div>';
+    }
+    else if(it.special==='dhrdclear') extra='<div class="cl-fields-row">'+fgrp('Date Sent:',dbox('dhrd_sent'))+fgrp('Date Cleared:',dbox('dhrd_cleared'))+'</div>';
+    else if(it.special==='329c') extra='<div class="cl-fields-row">'+fgrp('Sent to selectee:',dbox('c329_sel'))+fgrp('SP received:',dbox('c329_sp'))+fgrp('Cleared:',dbox('c329_cleared'))+'</div>';
+    else if(it.special==='preemp') extra='<div class="cl-fields-row">'+scb('pre_cjis','CJIS')+scb('pre_ecourtk','eCourt Kokua')+scb('pre_nsopw','NSOPW')+'</div>';
+    else if(it.special==='suitability'){
+      extra='<div class="cl-fields-row"><div class="radios">'+crad('suit_req_'+activeCardId,'yes','Yes',d.suitability_req,'doSuitReq')+crad('suit_req_'+activeCardId,'no','No',d.suitability_req,'doSuitReq')+'</div></div>'+
+        '<div class="cond-sub'+(suitYes?'':' off')+'" id="suit-sub">'+
+          sRow('t_suit1','1. Suitability Inv. sent to DHRD',fgrp('Date:',dbox('suit_sent_date')))+
+          sRow('t_suit2','2. DHRD Suitability Complete',fgrp('Date:',dbox('suit_comp_date')))+
+          sRow('t_suit3','3. DHRD Determination','<div class="radios">'+crad('suit_det_'+activeCardId,'suitable','Suitable',d.suit_det,'doSuitDet')+crad('suit_det_'+activeCardId,'unsuitable','Unsuitable',d.suit_det,'doSuitDet')+'</div>')+
+          sRow('t_suit4','4. PER/HWY-SP Sustain?','<div class="radios">'+crad('suit_sus_'+activeCardId,'yes','Yes',d.suit_sustain,'doSuitSus')+crad('suit_sus_'+activeCardId,'no','No',d.suit_sustain,'doSuitSus')+'</div>'+fgrp('Response date:',dbox('suit_resp_date')))+
+          sRow('t_suit5','5. DHRD suitability letters received','<div class="cl-fields-row">'+fgrp('Open:',dbox('suit_open'))+fgrp('Det:',dbox('suit_det2'))+fgrp('Close:',dbox('suit_close'))+'</div>')+
+        '</div>';
+    }
+    else if(it.special==='finaloffer'){
+      extra='<div class="cl-fields-row">'+fgrp('Date emailed:',dbox('final_offer_date'))+'</div>'+
+        '<div class="cl-fields-row" style="margin-top:4px"><div class="radios">'+crad('final_out_'+activeCardId,'accepted','&#9989; Job Accepted',d.final_offer_outcome,'doFinalOutcome')+crad('final_out_'+activeCardId,'declined','&#10060; Job Declined',d.final_offer_outcome,'doFinalOutcome')+'</div></div>'+
+        '<div class="cl-fields-row" style="margin-top:4px">'+fgrp('Date accepted/rejected:',dbox('final_offer_acc_date'))+'</div>';
+    }
+    else if(it.special==='hrd1') extra='<div class="cl-fields-row"><div class="radios">'+crad('hrd1_req_'+activeCardId,'yes','Yes',d.hrd1_req,'doHrd1')+crad('hrd1_req_'+activeCardId,'no','No',d.hrd1_req,'doHrd1')+'</div><div id="hrd1-date" style="'+(hrd1Yes?'':'opacity:.35;pointer-events:none')+'">'+fgrp('Date completed:',dbox('hrd1_date'))+'</div></div>';
+    else if(it.special==='postings') extra='<div class="cl-fields-row">'+scb('post_wiki','Wiki Wiki log')+scb('post_recstatus','Rec. Status Log')+scb('post_green','Green book')+scb('post_turnover','Turnover')+'</div>';
+    else if(it.special==='datebox') extra=fgrp('Date:',dbox(it.dataKey||fid+'_date'));
+    else if(it.special==='neogov') extra='<div class="cl-fields-row">'+fgrp('Date assigned:',dbox('neogov_assign'))+fgrp('Due Date:',dbox('neogov_due'))+'</div>';
+    else if(it.special==='igm') extra='<div class="cl-fields-row">'+fgrp('Date:',dbox('igm_date'))+fgrp('Date completed:',dbox('igm_complete'))+'</div>';
+    else if(it.special==='onbtype'){
+      extra='<div class="cl-fields-row"><div class="radios">'+crad('onb_type_'+activeCardId,'new','New Hire / External',d.onboarding_type,'doOnbType')+crad('onb_type_'+activeCardId,'int','Internal',d.onboarding_type,'doOnbType')+'</div></div>'+
+        '<div class="cond-sub'+(onbNew?'':' off')+'" id="onb-sub">'+
+          '<div style="font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;padding:4px 8px 2px">Onboarding ERS</div>'+
+          sRow('t_ers_form1a','Send Form 1-A',fgrp('Date:',dbox('ers_form1a_date')))+
+          sRow('t_ers_send','Send ERS-1',fgrp('Date:',dbox('ers_send_date')))+
+          '<div style="font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;padding:6px 8px 2px;border-top:1px solid var(--border);margin-top:4px">Onboarding EUTF</div>'+
+          sRow('t_eutf_ec1','Send EC-1',fgrp('Date:',dbox('eutf_ec1_date')))+
+          sRow('t_eutf_sec','Send Securian Beneficiary Designation',fgrp('Date:',dbox('eutf_sec_date')))+
+        '</div>';
+    }
+    // ── Library item types (non-special) ──
+    else if(it.type==='date'){
+      const lbl=it.fieldLabel||'Date:';
+      extra=fgrp(lbl,dbox(fid+'_date'));
+    }
+    else if(it.type==='text'){
+      const lbl=it.fieldLabel||'Notes:';
+      extra='<div class="fld-grp"><span class="fld-lbl">'+lbl+'</span><input type="text" class="cl-text" value="'+esc(d[fid+'_text']||'')+'" onchange="saveData(\''+fid+'_text\',this.value)"></div>';
+    }
+    else if(it.type==='radio'){
+      const opts=(it.options||[]);
+      extra='<div class="cl-fields-row"><div class="radios">'+
+        opts.map(opt=>crad('lib_'+fid,opt,opt,d[fid+'_radio'],'saveRadioLib(\''+fid+'\',\''+opt.replace(/'/g,"\\'")+'\')')).join('')+
+      '</div></div>';
+    }
+    else if(it.type==='dropdown'){
+      const opts=(it.options||[]);
+      extra='<div class="fld-grp"><select class="cl-sel" onchange="saveData(\''+fid+'_dd\',this.value)">'+
+        '<option value="">— Select —</option>'+
+        opts.map(o=>'<option value="'+esc(o)+'"'+(d[fid+'_dd']===o?' selected':'')+'>'+esc(o)+'</option>').join('')+
+      '</select></div>';
+    }
+    else if(it.type==='number'){
+      const lbl=it.fieldLabel||'Value:';
+      extra='<div class="fld-grp"><span class="fld-lbl">'+lbl+'</span><input type="number" class="cl-text" style="width:80px" value="'+esc(d[fid+'_num']||'')+'" onchange="saveData(\''+fid+'_num\',this.value)"></div>';
+    }
+    else if(it.type==='multi'){
+      extra='<div class="cl-fields">'+
+        (it.multiFields||[]).map(mf=>{
+          const mk=fid+'_mf_'+mf.id;
+          if(mf.type==='date') return fgrp(mf.label+':',dbox(mk));
+          if(mf.type==='text') return '<div class="fld-grp"><span class="fld-lbl">'+mf.label+':</span><input type="text" class="cl-text" value="'+esc(d[mk]||'')+'" onchange="saveData(\''+mk+'\',this.value)"></div>';
+          if(mf.type==='number') return '<div class="fld-grp"><span class="fld-lbl">'+mf.label+':</span><input type="number" class="cl-text" style="width:80px" value="'+esc(d[mk]||'')+'" onchange="saveData(\''+mk+'\',this.value)"></div>';
+          if(mf.type==='radio') return '<div class="fld-grp"><span class="fld-lbl">'+mf.label+':</span></div>';
+          return '';
+        }).join('')+
+      '</div>';
+    }
+
+    // Sub-items (nested checkboxes, any type)
+    const hasSubItems=it.subItems&&it.subItems.length>0;
+    if(hasSubItems){
+      const subHTML='<div class="cond-sub" style="margin-top:4px;opacity:1;pointer-events:auto">'+
+        it.subItems.map(si=>{
+          const schk=!!d[si.id];
+          return '<div class="cl-row'+(schk?' done-row':'')+'" id="row-'+si.id+'">'+
+            '<span style="width:8px;flex-shrink:0"></span>'+
+            '<input type="checkbox" class="cl-chk" '+(schk?'checked ':'')+' onchange="toggleCB(\''+si.id+'\',this.checked)">'+
+            '<div class="cl-content"><div class="cl-lbl'+(schk?' struck':'')+'" id="lbl-'+si.id+'">'+esc(si.label)+'</div></div>'+
+          '</div>';
+        }).join('')+
+      '</div>';
+      extra=(extra?extra+subHTML:subHTML);
+    }
+
+    const da='draggable="true" ondragstart="dragStart(event,\''+secId+'\','+idx+','+isCustom+')" ondragover="event.preventDefault();dragOver(event,this)" ondrop="dragDrop(event,\''+secId+'\','+idx+','+isCustom+')" ondragleave="dragLeave(this)"';
+    return '<div class="cl-row'+(chk?' done-row':'')+(locked?' locked':'')+'" id="row-'+fid+'" '+da+'>'+
+      '<span class="drag-handle">&#8661;</span>'+
+      '<input type="checkbox" class="cl-chk" '+(chk?'checked ':'')+' onchange="toggleCB(\''+fid+'\',this.checked)">'+
+      '<div class="cl-content">'+
+        '<div class="cl-lbl'+(chk?' struck':'')+'" id="lbl-'+fid+'" ondblclick="editItemLabel(\''+fid+'\')" title="Double-click to edit">'+esc(it.label)+'</div>'+
+        '<textarea class="cl-lbl-edit" id="edit-'+fid+'" rows="1" onblur="saveItemLabel(\''+fid+'\',\''+secId+'\','+isCustom+')" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();saveItemLabel(\''+fid+'\',\''+secId+'\','+isCustom+')}">'+esc(it.label)+'</textarea>'+
+        (extra?'<div class="cl-fields">'+extra+'</div>':'')+
+      '</div>'+
+      (isCustom?'<button style="background:none;border:none;color:#ccc;cursor:pointer;font-size:.8rem;padding:0 3px" onclick="removeCustomItem(\''+fid+'\')">&#10005;</button>':'')+
+    '</div>';
+  }
+
+  function sRow(fid,lbl,extra){
+    const chk=!!d[fid];
+    return '<div class="cl-row'+(chk?' done-row':'')+'" id="row-'+fid+'">'+
+      '<span style="width:8px;flex-shrink:0"></span>'+
+      '<input type="checkbox" class="cl-chk" '+(chk?'checked ':'')+' onchange="toggleCB(\''+fid+'\',this.checked)">'+
+      '<div class="cl-content"><div class="cl-lbl'+(chk?' struck':'')+'" id="lbl-'+fid+'">'+esc(lbl)+'</div>'+(extra?'<div class="cl-fields">'+extra+'</div>':'')+'</div></div>';
+  }
+
+  function secBlock(sec){
+    const ids=sec.items.map(i=>i.id);
+    const sd=ids.filter(id=>d[id]).length,st=ids.length,sp=st?Math.round(sd/st*100):0;
+    const hid=collapsedSections[sec.id]?'hidden':'';
+    return '<div class="cl-section-block" id="secblock-'+sec.id+'">'+
+      '<div class="cl-section-hdr" onclick="toggleSection(\''+sec.id+'\')">'+
+        '<span class="cl-sec-title">'+esc(sec.title)+'</span>'+
+        '<span class="cl-sec-meta" id="secmeta-'+sec.id+'">'+sd+'/'+st+'</span>'+
+        '<button class="cl-sec-toggle">'+(hid?'&#9660;':'&#9650;')+'</button>'+
+      '</div>'+
+      '<div class="cl-section-pbar"><div class="cl-section-pfill" id="secpf-'+sec.id+'" style="width:'+sp+'%"></div></div>'+
+      '<div class="cl-sec-body '+hid+'" id="secbody-'+sec.id+'">'+
+        sec.items.map((it,idx)=>buildItemHTML(it,sec.id,idx,false)).join('')+
+      '</div>'+
+    '</div>';
+  }
+
+  const ci=card.customItems||[];
+  const cd=ci.filter(i=>d[i.id]).length,ct=ci.length,cp=ct?Math.round(cd/ct*100):0;
+  const customBlock='<div class="cl-section-block" id="secblock-custom">'+
+    '<div class="cl-section-hdr" onclick="toggleSection(\'custom\')"><span class="cl-sec-title">Custom Items</span><span class="cl-sec-meta" id="secmeta-custom">'+cd+'/'+ct+'</span><button class="cl-sec-toggle">'+(collapsedSections['custom']?'&#9660;':'&#9650;')+'</button></div>'+
+    '<div class="cl-section-pbar"><div class="cl-section-pfill" id="secpf-custom" style="width:'+cp+'%"></div></div>'+
+    '<div class="cl-sec-body'+(collapsedSections['custom']?' hidden':'')+'" id="secbody-custom">'+
+      (ct===0?'<div style="font-size:.75rem;color:var(--muted);padding:6px 10px">No custom items yet</div>':ci.map((it,idx)=>buildItemHTML(it,'custom',idx,true)).join(''))+
+      '<div class="add-item-row"><input type="text" class="add-item-input" id="custom-new-input" placeholder="Add item for this card only..." onkeydown="if(event.key===\'Enter\')addCustomItem()"><button class="add-item-btn" onclick="addCustomItem()">+ Add</button></div>'+
+    '</div></div>';
+
+  document.getElementById('detailModal').innerHTML=
+    '<div class="modal-strip" style="background:'+col.color+'"></div>'+
+    '<div class="modal-body">'+
+      '<div class="modal-header"><div class="modal-title-wrap">'+
+        '<div class="mtitle-display" id="title-display" onclick="editTitle()" title="Click to edit">'+esc(card.title)+' &#9998;</div>'+
+        '<textarea class="mtitle-edit" id="title-input" onblur="saveTitle()" onkeydown="if(event.key===\'Enter\'&&!event.shiftKey){event.preventDefault();saveTitle()}">'+esc(card.title)+'</textarea>'+
+        '<div class="modal-stage"><span style="width:8px;height:8px;border-radius:50%;background:'+col.color+';display:inline-block"></span>'+esc(col.name)+'</div>'+
+      '</div><button class="close-x" onclick="closeModal(\'detailOverlay\')">&#10005;</button></div>'+
+      '<div class="eff-date-row"><label>&#128197; Effective Date:</label>'+
+        (function(){const raw=card.effdate||'';let iso='';if(raw){const p=raw.split('/');if(p.length===3&&p[2].length===4)iso=p[2]+'-'+p[0].padStart(2,'0')+'-'+p[1].padStart(2,'0');}return '<input type="date" class="cl-date" value="'+iso+'" onchange="saveEffDatePicker(this.value)" style="width:160px;cursor:pointer">';})()+ 
+        (card.effdate?'<span style="font-size:.75rem;font-weight:600;padding:2px 9px;border-radius:10px;font-family:\'DM Mono\',monospace;background:'+(effDateStyle(card)?effDateStyle(card).bg:'#e8f0fe')+';color:'+(effDateStyle(card)?effDateStyle(card).color:'#0052cc')+'">'+card.effdate+'</span>':'')+
+      '</div>'+
+      '<div style="margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
+        '<div id="modal-label-display" style="display:flex;flex-wrap:wrap;gap:4px;flex:1">'+
+          (card.labels.length===0?'<span style="font-size:.75rem;color:var(--muted);font-style:italic">No labels</span>':card.labels.map(lid=>{const l=LABELS.find(x=>x.id===lid);return l?'<span class="card-label" style="background:'+l.color+';font-size:.72rem;padding:3px 9px;border-radius:10px">'+esc(l.name)+'</span>':''}).join(''))+
+        '</div>'+
+        '<button class="btn" style="background:#f4f5f7;color:#172b4d;border:1px solid var(--border);font-size:.75rem;padding:4px 10px;white-space:nowrap" onclick="openLabelMgr()">&#127991; Labels</button>'+
+      '</div>'+
+      '<div class="modal-grid"><div>'+
+        '<div class="desc-section"><div class="desc-header"><span class="desc-header-label">&#128221; Description</span><button class="desc-edit-btn" id="desc-edit-btn" onclick="toggleDesc()">Edit</button></div>'+
+          '<div class="desc-display'+(card.description?'':' empty')+'" id="desc-display" onclick="toggleDesc()">'+(card.description?esc(card.description):'Click to add notes...')+'</div>'+
+          '<textarea class="desc-textarea" id="desc-textarea" placeholder="Add notes, details, reminders..." onblur="saveDesc()">'+esc(card.description||'')+'</textarea>'+
+        '</div>'+
+        '<div class="prog-hdr"><div class="detail-label">Checklist</div><span id="prog-lbl" style="font-size:.72rem;color:var(--muted);font-family:\'DM Mono\',monospace">'+done+'/'+total+' \xb7 '+pct+'%</span></div>'+
+        '<div class="fpbar"><div class="fpbar-fill" id="dpbar" style="width:'+pct+'%"></div></div>'+
+        getCardChecklist(card).sections.map(sec=>secBlock(sec)).join('')+
+        customBlock+
+      '</div><div>'+
+        '<div class="sidebar-section"><div class="detail-label">Move to Stage</div><select class="form-select" onchange="moveCard(\''+activeCardId+'\',this.value)">'+stageOpts+'</select></div>'+
+        '<div class="sidebar-section"><div class="detail-label">Checklist</div>'+
+          '<select class="form-select" id="card-cl-sel" style="font-size:.78rem" onchange="changeCardChecklist(this.value)">'+
+            CL_LIBRARY.map(l=>'<option value="'+l.id+'"'+((card.checklistId||'__default__')===l.id?' selected':'')+'>'+esc(l.name)+'</option>').join('')+
+          '</select>'+
+        '</div>'+
+        '<div class="sidebar-section"><div class="detail-label">HR Staff</div><input type="text" class="form-input" style="font-size:.8rem" value="'+esc(card.hr||'')+'" onchange="saveHR(this.value)" placeholder="Assign HR staff"></div>'+
+        '<div class="sidebar-section"><div class="detail-label">Completion</div><div id="dpct" style="font-size:1.5rem;font-weight:700;font-family:\'DM Mono\',monospace;color:'+(pct===100?'#00875a':'#172b4d')+'">'+pct+'%</div><div id="dpct-sub" style="font-size:.72rem;color:var(--muted);margin-top:2px">'+done+' of '+total+'</div></div>'+
+      '</div></div>'+
+      '<div class="modal-footer">'+
+        '<button style="background:#ffecea;color:#de350b;border:none;cursor:pointer;padding:5px 12px;border-radius:4px;font-size:.78rem;font-weight:500" onclick="deleteCard(\''+activeCardId+'\')">Remove Card</button>'+
+        '<div style="display:flex;gap:8px"><button class="btn" style="background:#f4f5f7;color:#172b4d;border:1px solid var(--border)" onclick="printChecklist(\''+activeCardId+'\')">&#128424; Print / Save PDF</button>'+
+        '<button class="btn" style="background:#0052cc;color:#fff" onclick="closeModal(\'detailOverlay\')">Close</button></div>'+
+      '</div>'+
+    '</div>';
+}
+
+// ── CLEARABLE RADIO ───────────────────────────────────────────────────
+const CR_KEY_MAP={
+  'cond_acc_':'cond_acc','suit_req_':'suitability_req','suit_det_':'suit_det',
+  'suit_sus_':'suit_sustain','hrd1_req_':'hrd1_req','onb_type_':'onboarding_type','final_out_':'final_offer_outcome'
+};
+function crClick(name,val,fn){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  const prefix=Object.keys(CR_KEY_MAP).find(p=>name.startsWith(p));
+  if(!prefix)return;
+  const dkey=CR_KEY_MAP[prefix];
+  const cur=card.data[dkey];
+  const newVal=cur===val?null:val;
+  card.data[dkey]=newVal;
+  document.querySelectorAll('input[name="'+name+'"]').forEach(r=>{r.checked=r.value===newVal;});
+  if(fn==='doCondOutcome') doCondOutcome(newVal||'');
+  else if(fn==='doFinalOutcome') doFinalOutcome(newVal||'');
+  else if(fn==='doSuitReq'){const el=document.getElementById('suit-sub');if(el)el.classList.toggle('off',newVal!=='yes');}
+  else if(fn==='doHrd1'){const el=document.getElementById('hrd1-date');if(el){el.style.opacity=newVal==='yes'?'1':'.35';el.style.pointerEvents=newVal==='yes'?'auto':'none';}}
+  else if(fn==='doOnbType'){const el=document.getElementById('onb-sub');if(el)el.classList.toggle('off',newVal!=='new');}
+  refreshProg();saveToStorage();render();
+}
+function doCondOutcome(val){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  if(val==='rejected'){if(!card.labels.includes('rejcond'))card.labels.push('rejcond');}
+  else card.labels=card.labels.filter(l=>l!=='rejcond');
+  refreshLabelDisplay();buildDetail();
+}
+function doFinalOutcome(val){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  if(val==='declined'){if(!card.labels.includes('rejjob'))card.labels.push('rejjob');}
+  else card.labels=card.labels.filter(l=>l!=='rejjob');
+  refreshLabelDisplay();buildDetail();
+}
+
+// ── SECTION TOGGLE ────────────────────────────────────────────────────
+function toggleSection(key){
+  collapsedSections[key]=!collapsedSections[key];
+  const body=document.getElementById('secbody-'+key);
+  const btn=document.querySelector('#secblock-'+key+' .cl-sec-toggle');
+  if(body)body.classList.toggle('hidden',!!collapsedSections[key]);
+  if(btn)btn.textContent=collapsedSections[key]?'\u25bc':'\u25b2';
+}
+
+// ── DRAG & DROP ───────────────────────────────────────────────────────
+let dragSrc=null;
+function dragStart(e,secId,idx,isCustom){dragSrc={secId,idx,isCustom};e.currentTarget.classList.add('dragging');}
+function dragOver(e,el){el.classList.add('drag-over');}
+function dragLeave(el){el.classList.remove('drag-over');}
+function dragDrop(e,secId,idx,isCustom){
+  e.preventDefault();if(!dragSrc)return;
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  if(dragSrc.isCustom&&isCustom){const a=card.customItems;const[m]=a.splice(dragSrc.idx,1);a.splice(idx,0,m);}
+  else if(!dragSrc.isCustom&&!isCustom&&dragSrc.secId===secId){const sec=CL_TEMPLATE.find(s=>s.id===secId);if(sec){const[m]=sec.items.splice(dragSrc.idx,1);sec.items.splice(idx,0,m);}}
+  dragSrc=null;saveToStorage();buildDetail();
+}
+
+// ── CUSTOM ITEMS ──────────────────────────────────────────────────────
+function addCustomItem(){
+  const inp=document.getElementById('custom-new-input');if(!inp)return;
+  const label=inp.value.trim();if(!label){showToast('Enter item text');return;}
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  if(!card.customItems)card.customItems=[];
+  card.customItems.push({id:'ci_'+Date.now(),label});
+  inp.value='';saveToStorage();buildDetail();
+}
+function removeCustomItem(id){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  card.customItems=(card.customItems||[]).filter(i=>i.id!==id);
+  delete card.data[id];saveToStorage();buildDetail();
+}
+
+// ── TITLE / HR / DESC ────────────────────────────────────────────────
+function editTitle(){document.getElementById('title-display').style.display='none';const i=document.getElementById('title-input');i.style.display='block';i.focus();i.select();}
+function saveTitle(){
+  const i=document.getElementById('title-input');const val=i.value.trim();const d=document.getElementById('title-display');
+  if(val){const card=cards.find(c=>c.id===activeCardId);card.title=val;if(d){d.textContent=val+' \u270e';d.style.display='';}i.style.display='none';saveToStorage();render();}
+  else{i.style.display='none';if(d)d.style.display='';}
+}
+function saveHR(val){const card=cards.find(c=>c.id===activeCardId);if(card){card.hr=val;saveToStorage();render();}}
+function toggleDesc(){
+  const ta=document.getElementById('desc-textarea'),disp=document.getElementById('desc-display'),btn=document.getElementById('desc-edit-btn');
+  if(!ta.style.display||ta.style.display==='none'){ta.style.display='block';disp.style.display='none';if(btn)btn.textContent='Cancel';ta.focus();}
+}
+function saveDesc(){
+  const ta=document.getElementById('desc-textarea');const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  card.description=ta.value.trim();const disp=document.getElementById('desc-display');
+  if(disp){disp.textContent=card.description||'Click to add notes...';disp.className='desc-display'+(card.description?'':' empty');disp.style.display='';}
+  ta.style.display='none';const btn=document.getElementById('desc-edit-btn');if(btn)btn.textContent='Edit';
+  saveToStorage();render();
+}
+function editItemLabel(fid){const lbl=document.getElementById('lbl-'+fid);const edit=document.getElementById('edit-'+fid);if(!lbl||!edit)return;edit.value=lbl.textContent;lbl.style.display='none';edit.style.display='block';edit.focus();edit.select();}
+function saveItemLabel(fid,secId,isCustom){
+  const edit=document.getElementById('edit-'+fid);const lbl=document.getElementById('lbl-'+fid);if(!edit||!lbl)return;
+  const val=edit.value.trim();
+  if(val){lbl.textContent=val;lbl.style.display='';edit.style.display='none';
+    if(isCustom){const card=cards.find(c=>c.id===activeCardId);const it=(card.customItems||[]).find(i=>i.id===fid);if(it)it.label=val;}
+    else{const sec=CL_TEMPLATE.find(s=>s.id===secId);if(sec){const it=sec.items.find(i=>i.id===fid);if(it)it.label=val;}}
+    saveToStorage();}
+  else{lbl.style.display='';edit.style.display='none';}
+}
+
+// ── DATA HELPERS ──────────────────────────────────────────────────────
+function saveData(key,val){const card=cards.find(c=>c.id===activeCardId);if(!card)return;card.data[key]=val;refreshProg();saveToStorage();render();}
+function saveRadioLib(fid,val){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  const key=fid+'_radio';
+  card.data[key]=(card.data[key]===val)?null:val;
+  document.querySelectorAll('input[name="lib_'+fid+'"]').forEach(r=>{r.checked=r.value===card.data[key];});
+  saveToStorage();render();
+}
+function saveDateField(key,isoVal){
+  // Convert YYYY-MM-DD → MM/DD/YYYY for storage/display
+  let display='';
+  if(isoVal){const p=isoVal.split('-');if(p.length===3)display=p[1]+'/'+p[2]+'/'+p[0];}
+  saveData(key,display);
+}
+function toggleCB(fid,checked){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;card.data[fid]=checked;
+  const row=document.getElementById('row-'+fid),lbl=document.getElementById('lbl-'+fid);
+  if(row)row.classList.toggle('done-row',checked);if(lbl)lbl.classList.toggle('struck',checked);
+  refreshProg();saveToStorage();render();
+}
+function refreshProg(){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  const done=countProg(card),total=totalProg(card),pct=total?Math.round(done/total*100):0;
+  const pb=document.getElementById('dpbar');if(pb)pb.style.width=pct+'%';
+  const pe=document.getElementById('dpct');if(pe){pe.textContent=pct+'%';pe.style.color=pct===100?'#00875a':'#172b4d';}
+  const ps=document.getElementById('dpct-sub');if(ps)ps.textContent=done+' of '+total;
+  const pl=document.getElementById('prog-lbl');if(pl)pl.textContent=done+'/'+total+' \xb7 '+pct+'%';
+  const cl=getCardChecklist(card);
+  (cl.sections||[]).forEach(sec=>{
+    const ids=sec.items.map(i=>i.id);const sd=ids.filter(id=>card.data[id]).length,st=ids.length,sp=st?Math.round(sd/st*100):0;
+    const pf=document.getElementById('secpf-'+sec.id);if(pf)pf.style.width=sp+'%';
+    const meta=document.getElementById('secmeta-'+sec.id);if(meta)meta.textContent=sd+'/'+st;
+  });
+  const ci=card.customItems||[];const cd=ci.filter(i=>card.data[i.id]).length,ct=ci.length;
+  const cpf=document.getElementById('secpf-custom');if(cpf)cpf.style.width=(ct?Math.round(cd/ct*100):0)+'%';
+  const cm=document.getElementById('secmeta-custom');if(cm)cm.textContent=cd+'/'+ct;
+}
+function saveEffDate(val){const card=cards.find(c=>c.id===activeCardId);if(card){card.effdate=val;saveToStorage();render();}}
+function saveEffDatePicker(isoVal){
+  let display='';
+  if(isoVal){const p=isoVal.split('-');if(p.length===3)display=p[1]+'/'+p[2]+'/'+p[0];}
+  saveEffDate(display);
+}
+
+// ── LABEL MANAGER ────────────────────────────────────────────────────
+function openLabelMgr(){renderLabelMgr();openModal('lblMgrOverlay');}
+function refreshLabelDisplay(){
+  const card=cards.find(c=>c.id===activeCardId);if(!card)return;
+  const disp=document.getElementById('modal-label-display');if(!disp)return;
+  disp.innerHTML=card.labels.length===0?'<span style="font-size:.75rem;color:var(--muted);font-style:italic">No labels</span>':card.labels.map(lid=>{const l=LABELS.find(x=>x.id===lid);return l?'<span class="card-label" style="background:'+l.color+';font-size:.72rem;padding:3px 9px;border-radius:10px">'+esc(l.name)+'</span>':''}).join('');
+}
+function renderLabelMgr(){
+  const list=document.getElementById('lmgr-list');if(!list)return;
+  const card=cards.find(c=>c.id===activeCardId);const selected=card?card.labels:[];
+  list.innerHTML='<div class="lmgr-hint">&#9745; Check = apply to this card &nbsp;|&nbsp; Edit &nbsp;|&nbsp; &#10005; Delete</div>'+
+    LABELS.map((l,i)=>'<div class="lmgr-row"><input type="checkbox" class="lmgr-check" id="lmgr-chk-'+l.id+'" '+(selected.includes(l.id)?'checked ':'')+' onchange="toggleLabelFromMgr(\''+l.id+'\',this.checked)">'+
+      '<span style="font-size:.75rem;font-weight:700;color:#fff;background:'+l.color+';padding:2px 9px;border-radius:8px;min-width:64px;text-align:center;cursor:pointer" onclick="document.getElementById(\'lmgr-chk-'+l.id+'\').click()">'+esc(l.name)+'</span>'+
+      '<input type="color" class="lmgr-swatch" value="'+l.color+'" onchange="updateLabelColor('+i+',this.value)">'+
+      '<input type="text" class="lmgr-name" value="'+esc(l.name)+'" onchange="updateLabelName('+i+',this.value)">'+
+      '<button class="lmgr-del" onclick="deleteLabel('+i+')">&#10005;</button></div>').join('');
+}
+function toggleLabelFromMgr(lid,checked){const card=cards.find(c=>c.id===activeCardId);if(!card)return;const idx=card.labels.indexOf(lid);if(checked&&idx<0)card.labels.push(lid);if(!checked&&idx>=0)card.labels.splice(idx,1);refreshLabelDisplay();saveToStorage();render();}
+function updateLabelName(i,val){if(val.trim()){LABELS[i].name=val.trim();renderLabelMgr();refreshLabelDisplay();saveToStorage();render();}}
+function updateLabelColor(i,val){LABELS[i].color=val;renderLabelMgr();refreshLabelDisplay();saveToStorage();render();}
+function deleteLabel(i){if(!confirm('Delete label "'+LABELS[i].name+'"?'))return;const lid=LABELS[i].id;cards.forEach(c=>{c.labels=c.labels.filter(l=>l!==lid);});LABELS.splice(i,1);renderLabelMgr();refreshLabelDisplay();saveToStorage();render();}
+function addLabel(){const n=document.getElementById('lmgr-new-name').value.trim();const c=document.getElementById('lmgr-new-color').value;if(!n){showToast('Enter a label name');return;}LABELS.push({id:'lbl'+Date.now(),name:n,color:c});document.getElementById('lmgr-new-name').value='';renderLabelMgr();saveToStorage();render();showToast('"'+n+'" added!');}
+
+// ── CHECKLIST LIBRARY ─────────────────────────────────────────────────
+// Multiple named checklists. Default is the built-in HWY-SP one.
+// Each checklist: { id, name, sections: [{id, title, items:[{id,label,type,fieldLabel,options,subItems,multiFields}]}] }
+// type: 'check'|'date'|'text'|'radio'|'dropdown'|'number'|'multi'|'special'
+// special: legacy hardcoded types (licenses, condoffer, etc.)
+let CL_LIBRARY = [
+  { id:'cl_default', name:'HWY-SP Standard', sections: CL_TEMPLATE.map(sec=>({
+    id: sec.id, title: sec.title,
+    items: sec.items.map(it=>({
+      id: it.id, label: it.label,
+      type: it.special ? 'special' : 'check',
+      special: it.special||null,
+      dataKey: it.dataKey||null,
+      fieldLabel:'', options:[], subItems:[], multiFields:[]
+    }))
+  }))}
+];
+
+let clbActiveListId = 'cl_default';
+let clbActiveSectionIdx = null;
+let ieEditingItem = null; // {listId, secIdx, itemIdx} or null for new
+let ieMultiFields = []; // temp multi fields during editing
+let ieSubItems = []; // temp subitems during editing
+
+function clbGetList(id){ return CL_LIBRARY.find(l=>l.id===id); }
+function clbActiveList(){ return clbGetList(clbActiveListId); }
+
+// ── OPEN BUILDER ──────────────────────────────────────────────────────
+function openClMgr(){
+  clbActiveSectionIdx=null;
+  renderClbSelector();
+  renderClbSections();
+  renderClbItems();
+  openModal('clMgrOverlay');
+}
+
+function renderClbSelector(){
+  const sel=document.getElementById('clb-selector'); if(!sel) return;
+  sel.innerHTML=CL_LIBRARY.map(l=>'<option value="'+l.id+'"'+(l.id===clbActiveListId?' selected':'')+'>'+esc(l.name)+'</option>').join('');
+}
+
+function clbSwitch(){
+  const sel=document.getElementById('clb-selector');
+  clbActiveListId=sel.value;
+  clbActiveSectionIdx=null;
+  renderClbSections();
+  renderClbItems();
+}
+
+function clbNew(){
+  const name=prompt('New checklist name:','My Checklist');
+  if(!name||!name.trim()) return;
+  const id='cl_'+Date.now();
+  CL_LIBRARY.push({id,name:name.trim(),sections:[{id:'s_'+Date.now(),title:'Section 1',items:[]}]});
+  clbActiveListId=id;
+  clbActiveSectionIdx=0;
+  saveToStorage();renderClbSelector();renderClbSections();renderClbItems();
+  showToast('"'+name.trim()+'" checklist created!');
+}
+
+function clbRename(){
+  const list=clbActiveList(); if(!list) return;
+  const name=prompt('Rename checklist:',list.name);
+  if(!name||!name.trim()) return;
+  list.name=name.trim();
+  saveToStorage();renderClbSelector();
+}
+
+function clbDelete(){
+  const list=clbActiveList(); if(!list) return;
+  if(list.id==='cl_default'){showToast('Cannot delete the default checklist');return;}
+  if(!confirm('Delete checklist "'+list.name+'"? Cards using it keep their current data.')) return;
+  // Move cards using this checklist back to default
+  cards.forEach(c=>{ if(c.checklistId===list.id) c.checklistId='cl_default'; });
+  CL_LIBRARY=CL_LIBRARY.filter(l=>l.id!==list.id);
+  clbActiveListId='cl_default';
+  clbActiveSectionIdx=null;
+  saveToStorage();renderClbSelector();renderClbSections();renderClbItems();
+  showToast('Checklist deleted.');
+}
+
+// ── SECTIONS ──────────────────────────────────────────────────────────
+function renderClbSections(){
+  const list=clbActiveList();
+  const el=document.getElementById('clb-sec-list'); if(!el) return;
+  if(!list){el.innerHTML='';return;}
+  el.innerHTML=(list.sections||[]).map((sec,i)=>
+    '<div onclick="clbSelectSection('+i+')" style="display:flex;align-items:center;gap:6px;padding:8px 10px;cursor:pointer;border-bottom:1px solid var(--border);'+(i===clbActiveSectionIdx?'background:#e8f0fe;color:#0052cc;font-weight:600':'background:#fff;color:#172b4d')+'" onmouseover="if('+i+'!==clbActiveSectionIdx)this.style.background=\'#f4f5f7\'" onmouseout="if('+i+'!==clbActiveSectionIdx)this.style.background=\'#fff\'">'+
+      '<span style="color:#ccc;cursor:grab;font-size:.9rem">&#8661;</span>'+
+      '<span style="flex:1;font-size:.8rem;line-height:1.3">'+esc(sec.title)+'</span>'+
+      '<span style="font-size:.7rem;color:var(--muted);background:#f4f5f7;padding:1px 6px;border-radius:8px">'+sec.items.length+'</span>'+
+      '<button onclick="event.stopPropagation();clbDeleteSection('+i+')" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:.8rem;padding:0 2px" title="Delete">&#10005;</button>'+
+    '</div>'
+  ).join('')+(list.sections.length===0?'<div style="padding:12px;text-align:center;color:var(--muted);font-size:.78rem">No sections yet</div>':'');
+}
+
+function clbSelectSection(idx){
+  clbActiveSectionIdx=idx;
+  renderClbSections();
+  renderClbItems();
+}
+
+function clbAddSection(){
+  const inp=document.getElementById('clb-new-sec'); if(!inp) return;
+  const title=inp.value.trim(); if(!title){showToast('Enter section name');return;}
+  const list=clbActiveList(); if(!list) return;
+  if(!list.sections) list.sections=[];
+  list.sections.push({id:'s_'+Date.now(),title,items:[]});
+  clbActiveSectionIdx=list.sections.length-1;
+  inp.value=''; saveToStorage(); renderClbSections(); renderClbItems();
+}
+
+function clbDeleteSection(idx){
+  const list=clbActiveList(); if(!list) return;
+  if(!confirm('Delete section "'+list.sections[idx].title+'" and all its items?')) return;
+  list.sections.splice(idx,1);
+  if(clbActiveSectionIdx>=list.sections.length) clbActiveSectionIdx=list.sections.length-1;
+  if(clbActiveSectionIdx<0) clbActiveSectionIdx=null;
+  saveToStorage(); renderClbSections(); renderClbItems();
+}
+
+// ── ITEMS ─────────────────────────────────────────────────────────────
+function renderClbItems(){
+  const el=document.getElementById('clb-item-list');
+  const titleEl=document.getElementById('clb-sec-title');
+  if(!el) return;
+  const list=clbActiveList();
+  if(!list||clbActiveSectionIdx===null||!list.sections[clbActiveSectionIdx]){
+    el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-size:.8rem">Select a section on the left</div>';
+    if(titleEl) titleEl.textContent='Select a section';
+    return;
+  }
+  const sec=list.sections[clbActiveSectionIdx];
+  if(titleEl) titleEl.textContent=sec.title;
+  el.innerHTML=(sec.items.length===0
+    ?'<div style="padding:16px;text-align:center;color:var(--muted);font-size:.78rem">No items yet — click + Add Item</div>'
+    :sec.items.map((it,ii)=>clbItemRow(it,ii)).join('')
+  );
+}
+
+const FIELD_TYPE_LABELS={check:'Checkbox',date:'Date',text:'Text',radio:'Radio',dropdown:'Dropdown',number:'Number',multi:'Multi-field',special:'Built-in'};
+const FIELD_TYPE_ICONS={check:'&#9745;',date:'&#128197;',text:'&#9999;',radio:'&#11096;',dropdown:'&#9660;',number:'&#8470;',multi:'&#128203;',special:'&#9881;'};
+
+function clbItemRow(it,ii){
+  const typeIcon=FIELD_TYPE_ICONS[it.type||'check']||'&#9745;';
+  const typeLbl=FIELD_TYPE_LABELS[it.type||'check']||'Checkbox';
+  const hasSubs=(it.subItems&&it.subItems.length>0);
+  return '<div style="display:flex;align-items:flex-start;gap:6px;padding:7px 10px;border-bottom:1px solid #f4f5f7;background:#fff" '+
+    'draggable="true" ondragstart="clbItemDragStart(event,'+ii+')" ondragover="event.preventDefault();clbItemDragOver(event,this)" ondrop="clbItemDrop(event,'+ii+')" ondragleave="clbItemDragLeave(this)">'+
+    '<span style="color:#ccc;cursor:grab;font-size:.9rem;margin-top:2px">&#8661;</span>'+
+    '<div style="flex:1;min-width:0">'+
+      '<div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+
+        '<span style="font-size:.83rem;font-weight:500;color:#172b4d">'+esc(it.label)+'</span>'+
+        '<span style="font-size:.67rem;padding:1px 6px;border-radius:8px;background:#e8f0fe;color:#0052cc;white-space:nowrap">'+typeIcon+' '+typeLbl+'</span>'+
+        (it.fieldLabel?'<span style="font-size:.67rem;color:var(--muted)">&#183; "'+esc(it.fieldLabel)+'"</span>':'')+
+        (it.options&&it.options.length?'<span style="font-size:.67rem;color:var(--muted)">&#183; '+it.options.length+' options</span>':'')+
+        (hasSubs?'<span style="font-size:.67rem;color:#00875a">&#183; '+it.subItems.length+' sub-items</span>':'')+
+      '</div>'+
+      (hasSubs?'<div style="margin-top:3px;display:flex;flex-wrap:wrap;gap:4px">'+
+        it.subItems.map(s=>'<span style="font-size:.68rem;background:#f4f5f7;padding:1px 6px;border-radius:3px;color:#172b4d">&#9744; '+esc(s.label)+'</span>').join('')+
+      '</div>':'')+'</div>'+
+    '<button onclick="clbEditItem('+ii+')" style="background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:.72rem;cursor:pointer;color:var(--muted);white-space:nowrap" title="Edit">&#9998; Edit</button>'+
+    '<button onclick="clbDeleteItem('+ii+')" style="background:none;border:none;cursor:pointer;color:#ccc;font-size:.85rem;padding:0 3px;margin-top:2px" title="Delete">&#10005;</button>'+
+  '</div>';
+}
+
+// item drag
+let clbItemDragSrcIdx=null;
+function clbItemDragStart(e,idx){clbItemDragSrcIdx=idx;e.currentTarget.style.opacity='.4';}
+function clbItemDragOver(e,el){el.style.borderTop='2px solid var(--accent)';}
+function clbItemDragLeave(el){el.style.borderTop='';}
+function clbItemDrop(e,idx){
+  e.preventDefault();
+  if(clbItemDragSrcIdx===null||clbItemDragSrcIdx===idx) return;
+  const list=clbActiveList();const sec=list.sections[clbActiveSectionIdx];
+  const[moved]=sec.items.splice(clbItemDragSrcIdx,1);sec.items.splice(idx,0,moved);
+  clbItemDragSrcIdx=null;saveToStorage();renderClbItems();
+}
+
+function clbDeleteItem(ii){
+  const list=clbActiveList();const sec=list.sections[clbActiveSectionIdx];
+  if(!confirm('Delete "'+sec.items[ii].label+'"?')) return;
+  sec.items.splice(ii,1);saveToStorage();renderClbItems();
+}
+
+// ── ITEM EDITOR ───────────────────────────────────────────────────────
+function clbAddItem(){
+  const list=clbActiveList();
+  if(clbActiveSectionIdx===null||!list){showToast('Select a section first');return;}
+  ieEditingItem=null; ieMultiFields=[]; ieSubItems=[];
+  document.getElementById('ie-title').textContent='Add Item';
+  document.getElementById('ie-label').value='';
+  document.getElementById('ie-type').value='check';
+  document.getElementById('ie-fieldlabel').value='';
+  document.getElementById('ie-options').value='';
+  document.getElementById('ie-has-subitems').checked=false;
+  document.getElementById('ie-subitems-wrap').style.display='none';
+  renderIeMultiList();renderIeSubList();
+  ieTypeChange();
+  openModal('itemEditOverlay');
+}
+
+function clbEditItem(ii){
+  const list=clbActiveList();const sec=list.sections[clbActiveSectionIdx];
+  const it=sec.items[ii];
+  ieEditingItem={listId:clbActiveListId,secIdx:clbActiveSectionIdx,itemIdx:ii};
+  ieMultiFields=it.multiFields?[...it.multiFields.map(f=>({...f}))]:[];
+  ieSubItems=it.subItems?[...it.subItems.map(s=>({...s}))]:[];
+  document.getElementById('ie-title').textContent='Edit: '+it.label;
+  document.getElementById('ie-label').value=it.label;
+  document.getElementById('ie-type').value=it.type||'check';
+  document.getElementById('ie-fieldlabel').value=it.fieldLabel||'';
+  document.getElementById('ie-options').value=(it.options||[]).join('\n');
+  const hasSubs=ieSubItems.length>0;
+  document.getElementById('ie-has-subitems').checked=hasSubs;
+  document.getElementById('ie-subitems-wrap').style.display=hasSubs?'block':'none';
+  renderIeMultiList();renderIeSubList();
+  ieTypeChange();
+  openModal('itemEditOverlay');
+}
+
+function ieTypeChange(){
+  const t=document.getElementById('ie-type').value;
+  const isOpts=t==='radio'||t==='dropdown';
+  const isMulti=t==='multi';
+  const hasField=t!=='check'&&t!=='multi'&&t!=='special';
+  document.getElementById('ie-options-wrap').style.display=isOpts?'block':'none';
+  document.getElementById('ie-multi-wrap').style.display=isMulti?'block':'none';
+  document.getElementById('ie-fieldlabel-wrap').style.display=hasField?'block':'none';
+}
+
+function ieAddMultiField(){
+  const lbl=document.getElementById('ie-multi-lbl').value.trim();
+  const type=document.getElementById('ie-multi-type').value;
+  if(!lbl){showToast('Enter field label');return;}
+  ieMultiFields.push({id:'mf_'+Date.now(),label:lbl,type});
+  document.getElementById('ie-multi-lbl').value='';
+  renderIeMultiList();
+}
+function renderIeMultiList(){
+  const el=document.getElementById('ie-multi-list');if(!el) return;
+  el.innerHTML=ieMultiFields.length===0
+    ?'<div style="padding:8px;text-align:center;color:var(--muted);font-size:.75rem">No fields yet</div>'
+    :ieMultiFields.map((f,i)=>
+      '<div style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:1px solid #f4f5f7">'+
+        '<span style="font-size:.8rem;flex:1">'+esc(f.label)+' <span style="color:var(--muted)">('+f.type+')</span></span>'+
+        '<button onclick="ieRemoveMultiField('+i+')" style="background:none;border:none;color:#ccc;cursor:pointer">&#10005;</button>'+
+      '</div>'
+    ).join('');
+}
+function ieRemoveMultiField(i){ieMultiFields.splice(i,1);renderIeMultiList();}
+
+function ieSubChange(){
+  const checked=document.getElementById('ie-has-subitems').checked;
+  document.getElementById('ie-subitems-wrap').style.display=checked?'block':'none';
+}
+function ieAddSubItem(){
+  const inp=document.getElementById('ie-new-subitem');const lbl=inp.value.trim();
+  if(!lbl){showToast('Enter sub-item label');return;}
+  ieSubItems.push({id:'si_'+Date.now(),label:lbl});inp.value='';renderIeSubList();
+}
+function renderIeSubList(){
+  const el=document.getElementById('ie-subitem-list');if(!el) return;
+  el.innerHTML=ieSubItems.length===0
+    ?'<div style="padding:6px 8px;color:var(--muted);font-size:.75rem">No sub-items yet</div>'
+    :ieSubItems.map((s,i)=>
+      '<div style="display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:1px solid #f4f5f7">'+
+        '<span style="font-size:.8rem;flex:1">&#9744; '+esc(s.label)+'</span>'+
+        '<button onclick="ieRemoveSubItem('+i+')" style="background:none;border:none;color:#ccc;cursor:pointer">&#10005;</button>'+
+      '</div>'
+    ).join('');
+}
+function ieRemoveSubItem(i){ieSubItems.splice(i,1);renderIeSubList();}
+
+function ieSave(){
+  const label=document.getElementById('ie-label').value.trim();
+  if(!label){showToast('Item label is required');return;}
+  const type=document.getElementById('ie-type').value;
+  const fieldLabel=document.getElementById('ie-fieldlabel').value.trim();
+  const optRaw=document.getElementById('ie-options').value;
+  const options=optRaw.split('\n').map(s=>s.trim()).filter(Boolean);
+  const hasSubs=document.getElementById('ie-has-subitems').checked;
+
+  const item={
+    id: ieEditingItem ? clbGetList(ieEditingItem.listId).sections[ieEditingItem.secIdx].items[ieEditingItem.itemIdx].id : 'i_'+Date.now(),
+    label, type, fieldLabel,
+    options: (type==='radio'||type==='dropdown')?options:[],
+    subItems: hasSubs?[...ieSubItems]:[],
+    multiFields: type==='multi'?[...ieMultiFields]:[],
+    special: null, dataKey: null
+  };
+
+  const list=clbActiveList();
+  const sec=list.sections[clbActiveSectionIdx];
+  if(ieEditingItem){
+    sec.items[ieEditingItem.itemIdx]=item;
+  } else {
+    sec.items.push(item);
+  }
+  closeModal('itemEditOverlay');
+  saveToStorage();renderClbItems();
+  showToast(ieEditingItem?'Item updated!':'Item added!');
+}
+
+// ── CHECKLIST SELECTOR in Add Card + Card modal ───────────────────────
+function populateChecklistSelector(selectId, currentId){
+  const sel=document.getElementById(selectId);if(!sel) return;
+  sel.innerHTML='<option value="__default__">HWY-SP Standard (Default)</option>'+
+    CL_LIBRARY.filter(l=>l.id!=='cl_default').map(l=>'<option value="'+l.id+'"'+(l.id===currentId?' selected':'')+'>'+esc(l.name)+'</option>').join('');
+  if(currentId) sel.value=currentId;
+}
+
+function changeCardChecklist(newId){
+  const card=cards.find(c=>c.id===activeCardId);if(!card) return;
+  if(!confirm('Change checklist? Current checklist data stays but new items will appear unchecked.')) return;
+  card.checklistId=newId;
+  saveToStorage();buildDetail();
+  showToast('Checklist changed!');
+}
+
+// Override openClMgr with legacy compat
+function openClMgr(){
+  clbActiveSectionIdx=null;
+  renderClbSelector();renderClbSections();renderClbItems();
+  openModal('clMgrOverlay');
+}
+
+// ── RENDER CARD CHECKLIST from library ───────────────────────────────
+function getCardChecklist(card){
+  const id=card.checklistId||'cl_default';
+  const found=CL_LIBRARY.find(l=>l.id===id);
+  return found||CL_LIBRARY[0];
+}
+
+// Build all progress IDs for a card based on its assigned checklist
+function allProgIds(card){
+  const ids=[];
+  const cl=getCardChecklist(card);
+  if(!cl) return ids;
+  (cl.sections||[]).forEach(sec=>
+    (sec.items||[]).forEach(it=>{
+      ids.push(it.id);
+      // Legacy special types with sub-checkboxes
+      if(it.special==='cleanset') ids.push('t_clean1','t_clean2','t_clean3','t_clean4','t_clean5','t_clean6');
+      // Sub-items
+      (it.subItems||[]).forEach(s=>ids.push(s.id));
+      // Multi-field radio sub-items don't count as separate progress
+    })
+  );
+  (card.customItems||[]).forEach(it=>ids.push(it.id));
+  return ids;
+}
+
+// ── LEGACY COMPAT: keep old CL_TEMPLATE in sync with default checklist
+// After loading, rebuild CL_TEMPLATE from the default checklist for backward compat
+function syncLegacyCLTemplate(){
+  const def=CL_LIBRARY.find(l=>l.id==='cl_default');
+  if(def){ CL_TEMPLATE=def.sections.map(sec=>({id:sec.id,title:sec.title,items:sec.items.map(it=>({id:it.id,label:it.label,special:it.special||null,dataKey:it.dataKey||null}))})); }
+}
+
+// ── OLD CL MANAGER FUNCTIONS (kept for backward compat calls) ─────────
+function renderClMgr(){ renderClbItems(); }
+function updateClItem(si,ii,val){ const l=clbActiveList();if(l&&l.sections[si]){l.sections[si].items[ii].label=val;saveToStorage();} }
+function deleteClItem(si,ii){ const l=clbActiveList();if(l&&l.sections[si]){l.sections[si].items.splice(ii,1);saveToStorage();renderClbItems();} }
+function addClItem(si){ /* handled by builder */ }
+function addClSection(){ clbAddSection(); }
+function deleteClSection(si){ clbDeleteSection(si); }
+
+// ── MOVE / DELETE ────────────────────────────────────────────────────
+function moveCard(cardId,newColId){const card=cards.find(c=>c.id===cardId);card.colId=newColId;closeModal('detailOverlay');saveToStorage();render();showToast('Moved to "'+COLUMNS.find(c=>c.id===newColId).name+'"');}
+function deleteCard(cardId){if(!confirm('Remove this card?'))return;cards=cards.filter(c=>c.id!==cardId);closeModal('detailOverlay');saveToStorage();render();showToast('Card removed.');}
+
+// ── ADD CARD ─────────────────────────────────────────────────────────
+let addSelectedLabels=[];
+function openAddModal(colId){
+  colId=colId||null;addSelectedLabels=[];
+  ['add-title','add-hr','add-effdate'].forEach(id=>{document.getElementById(id).value='';});
+  document.getElementById('add-rec-yes').checked=true;
+  document.getElementById('add-nonrec-note').style.display='none';
+  document.getElementById('add-stage').innerHTML=COLUMNS.map(c=>'<option value="'+c.id+'"'+(c.id===(colId||'sel')?' selected':'')+'>'+c.name+'</option>').join('');
+  populateChecklistSelector('add-checklist',null);
+  document.getElementById('add-label-picker').innerHTML=LABELS.map(l=>'<span style="display:inline-flex;align-items:center;padding:4px 11px;border-radius:12px;font-size:.72rem;font-weight:700;color:#fff;cursor:pointer;opacity:.45;border:2px solid transparent;transition:all .15s;margin:2px;background:'+l.color+'" data-lid="'+l.id+'" onclick="toggleAddLabel(\''+l.id+'\',this)">'+esc(l.name)+'</span>').join('');
+  openModal('addOverlay');
+}
+function handleAddRec(val){
+  const note=document.getElementById('add-nonrec-note');const sel=document.getElementById('add-stage');
+  if(val==='nonrec'){note.style.display='block';for(let i=0;i<sel.options.length;i++){if(sel.options[i].value==='nonsel'){sel.selectedIndex=i;break;}}}
+  else note.style.display='none';
+}
+function toggleAddLabel(lid,el){const i=addSelectedLabels.indexOf(lid);if(i>=0){addSelectedLabels.splice(i,1);el.style.opacity='.45';el.style.border='2px solid transparent';}else{addSelectedLabels.push(lid);el.style.opacity='1';el.style.border='2px solid rgba(0,0,0,.25)';}}
+function saveCard(){
+  const title=document.getElementById('add-title').value.trim();if(!title){showToast('Card title is required.');return;}
+  const isNR=document.getElementById('add-rec-no').checked;
+  const colId=isNR?'nonsel':document.getElementById('add-stage').value;
+  const labels=isNR?['nonrec']:[...addSelectedLabels];
+  const rawEff=document.getElementById('add-effdate').value;
+  let effdate='';if(rawEff){const p=rawEff.split('-');if(p.length===3)effdate=p[1]+'/'+p[2]+'/'+p[0];}
+  const clSel=document.getElementById('add-checklist');
+  const checklistId=clSel?clSel.value:'__default__';
+  cards.push({id:'c'+Date.now(),colId,title,hr:document.getElementById('add-hr').value.trim(),labels,effdate,description:'',data:{},customItems:[],checklistId});
+  closeModal('addOverlay');saveToStorage();render();showToast(isNR?'"'+title+'" \u2192 Not Recommended':'"'+title+'" added!');
+}
+
+// ── PRINT / SAVE PDF ─────────────────────────────────────────────────
+function printChecklist(cardId){
+  const card=cards.find(c=>c.id===cardId);if(!card)return;
+  const col=COLUMNS.find(c=>c.id===card.colId);
+  const d=card.data;
+  const done=countProg(card),total=totalProg(card),pct=total?Math.round(done/total*100):0;
+  const lblNames=card.labels.map(lid=>{const l=LABELS.find(x=>x.id===lid);return l?l.name:null;}).filter(Boolean);
+  const printDate=new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+
+  function pR(chk,lbl,sub){
+    const box=chk?'<td style="width:16px;padding:3px 4px 3px 0;vertical-align:top"><span style="display:inline-block;width:11px;height:11px;border:1.5px solid #00875a;border-radius:2px;background:#00875a;color:#fff;font-size:7px;line-height:11px;text-align:center">&#10003;</span></td>':'<td style="width:16px;padding:3px 4px 3px 0;vertical-align:top"><span style="display:inline-block;width:11px;height:11px;border:1.5px solid #aaa;border-radius:2px;background:#fff"></span></td>';
+    return '<tr style="'+(chk?'opacity:.55':'')+'">'+box+'<td style="padding:3px 0;font-size:9.5px;line-height:1.3;'+(chk?'text-decoration:line-through;color:#888':'color:#172b4d')+'">'+lbl+(sub?'<span style="color:#888;font-size:8.5px"> &mdash; '+sub+'</span>':'')+'</td></tr>';
+  }
+  function sec(title,rows){return '<tr><td colspan="2" style="padding:7px 0 2px"><div style="font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#0052cc;border-bottom:1.5px solid #0052cc;padding-bottom:2px">'+title+'</div></td></tr>'+rows;}
+
+  function buildRows(items){
+    return items.map(it=>{
+      const chk=!!d[it.id];let sub='';
+      if(it.special==='datebox') sub=d[it.dataKey||it.id+'_date']||'';
+      else if(it.special==='dhrdclear') sub=[d.dhrd_sent?'Sent: '+d.dhrd_sent:null,d.dhrd_cleared?'Cleared: '+d.dhrd_cleared:null].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='329c') sub=[d.c329_sel,d.c329_sp,d.c329_cleared].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='preemp') sub=[d.pre_cjis?'CJIS':null,d.pre_ecourtk?'eCourt Kokua':null,d.pre_nsopw?'NSOPW':null].filter(Boolean).join(', ');
+      else if(it.special==='condoffer') sub=[d.cond_emailed?'Emailed: '+d.cond_emailed:null,d.cond_acc?'Outcome: '+d.cond_acc:null,d.cond_acc_date?'Date: '+d.cond_acc_date:null].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='finaloffer') sub=[d.final_offer_date?'Emailed: '+d.final_offer_date:null,d.final_offer_outcome?'Outcome: '+d.final_offer_outcome:null,d.final_offer_acc_date?d.final_offer_acc_date:null].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='hrd1') sub=(d.hrd1_req||'')+(d.hrd1_date?' \u2014 '+d.hrd1_date:'');
+      else if(it.special==='postings') sub=[d.post_wiki?'Wiki Wiki':null,d.post_recstatus?'Rec. Status Log':null,d.post_green?'Green book':null,d.post_turnover?'Turnover':null].filter(Boolean).join(', ');
+      else if(it.special==='neogov') sub=[d.neogov_assign?'Assigned: '+d.neogov_assign:null,d.neogov_due?'Due: '+d.neogov_due:null].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='igm') sub=[d.igm_date?'Date: '+d.igm_date:null,d.igm_complete?'Done: '+d.igm_complete:null].filter(Boolean).join(' \xb7 ');
+      else if(it.special==='licenses') sub=[d.lic_driver?'Driver\'s':null,d.lic_pe?'PE':null,d.lic_other?'Other':null].filter(Boolean).join(', ');
+      else if(it.special==='selcert') sub=d.sel_cert_text||'';
+      else if(it.special==='prevchecks') sub=d.prev_checks_num?d.prev_checks_num+' check(s)':'';
+      else if(it.special==='onbtype') sub=d.onboarding_type==='new'?'New Hire/External':d.onboarding_type==='int'?'Internal':'';
+      return pR(chk,it.label,sub);
+    }).join('');
+  }
+
+  const leftHTML=CL_TEMPLATE.slice(0,2).map(s=>sec(s.title,buildRows(s.items))).join('');
+  const ri=CL_TEMPLATE.slice(2);const ci=card.customItems||[];
+  const rightHTML=ri.map(s=>sec(s.title,buildRows(s.items))).join('')+(ci.length?sec('Custom Items',buildRows(ci)):'');
+  const pb='<div style="height:5px;background:#e2e5ea;border-radius:3px;overflow:hidden;margin:6px 0 8px"><div style="height:100%;width:'+pct+'%;background:'+(pct===100?'#00875a':'#0052cc')+';border-radius:3px"></div></div>';
+
+  const htm='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Checklist</title><style>'+
+    '@page{size:letter;margin:.4in .45in}body{font-family:Arial,sans-serif;color:#172b4d;margin:0}table{width:100%;border-collapse:collapse}'+
+    '@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body>'+
+    '<div id="wrap">'+
+    '<div style="border-bottom:2px solid #0052cc;padding-bottom:7px;margin-bottom:6px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">'+
+        '<div style="flex:1"><div style="font-size:6px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0052cc;margin-bottom:3px">Hawaii Dept. of Transportation &mdash; Highways Division HR &nbsp;|&nbsp; HWY-SP Selection Checklist</div>'+
+          '<div style="font-size:12px;font-weight:700;line-height:1.3">'+card.title.replace(/&/g,'&amp;')+'</div>'+
+          (card.hr?'<div style="font-size:8.5px;color:#6b778c;margin-top:2px">HR: '+card.hr+'</div>':'')+
+        '</div>'+
+        '<div style="text-align:right;flex-shrink:0">'+
+          '<div style="font-size:8.5px;color:#6b778c">Printed '+printDate+'</div>'+
+          (card.effdate?'<div style="font-size:8.5px;color:#6b778c">Eff: '+card.effdate+'</div>':'')+
+          '<div style="font-size:19px;font-weight:700;color:'+(pct===100?'#00875a':'#0052cc')+'">'+pct+'%</div>'+
+          '<div style="font-size:8px;color:#6b778c">'+done+'/'+total+' items</div>'+
+        '</div>'+
+      '</div>'+
+      (lblNames.length?'<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">'+lblNames.map(n=>{const l=LABELS.find(x=>x.name===n);return '<span style="font-size:7px;font-weight:700;background:'+(l?l.color:'#888')+';color:#fff;padding:1px 7px;border-radius:3px">'+n+'</span>';}).join('')+'</div>':'')+
+      pb+
+      (card.description?'<div style="font-size:9px;color:#444;background:#f4f5f7;padding:4px 7px;border-radius:3px;margin-bottom:4px"><strong>Notes:</strong> '+card.description+'</div>':'')+
+    '</div>'+
+    '<table><tr style="vertical-align:top">'+
+      '<td style="width:49%;padding-right:11px"><table>'+leftHTML+'</table></td>'+
+      '<td style="width:2%;border-left:1px solid #e2e5ea"></td>'+
+      '<td style="width:49%;padding-left:11px"><table>'+rightHTML+'</table></td>'+
+    '</tr></table>'+
+    '<div style="margin-top:10px;padding-top:5px;border-top:1px solid #e2e5ea;display:flex;justify-content:space-between;font-size:7px;color:#bbb"><span>HWY-SP Recruitment Dashboard</span><span>'+printDate+'</span></div>'+
+    '</div>'+
+    '<script>window.onload=function(){'+
+      'var w=document.getElementById("wrap");'+
+      'var scaleH=Math.min(1,(window.innerHeight-80)/w.scrollHeight);'+
+      'var scaleW=Math.min(1,(window.innerWidth-60)/w.scrollWidth);'+
+      'var scale=Math.min(scaleH,scaleW);'+
+      'if(scale<1){w.style.transform="scale("+scale+")";w.style.transformOrigin="top left";w.style.width=(100/scale)+"%";}'+
+      'window.print();}<\/script>'+
+    '</body></html>';
+  const win=window.open('','_blank','width=900,height=720');
+  if(win){win.document.write(htm);win.document.close();}else showToast('Allow pop-ups to print');
+}
+
+// ── STAGE MANAGER ─────────────────────────────────────────────────────
+let editingStageId=null;
+let stageDragSrc=null;
+
+function openStageMgr(){renderStageList();openModal('stageMgrOverlay');}
+
+function renderStageList(){
+  const list=document.getElementById('stage-list');if(!list)return;
+  list.innerHTML=COLUMNS.map((col,i)=>
+    '<div id="strow-'+col.id+'" draggable="true" '+
+      'ondragstart="stDragStart(event,'+i+')" '+
+      'ondragover="event.preventDefault();stDragOver(event,this)" '+
+      'ondrop="stDragDrop(event,'+i+')" '+
+      'ondragleave="stDragLeave(this)" '+
+      'style="display:flex;align-items:center;gap:8px;padding:7px 6px;border-radius:6px;border-bottom:1px solid var(--border);transition:background .1s;cursor:default" '+
+      'onmouseover="this.style.background=\'#f8f9fa\'" onmouseout="this.style.background=\'\'">'+ 
+      '<span style="color:#ccc;cursor:grab;font-size:1rem;padding:0 3px;user-select:none" title="Drag to reorder">&#8661;</span>'+
+      '<div style="width:18px;height:18px;border-radius:4px;background:'+col.color+';flex-shrink:0"></div>'+
+      '<span style="flex:1;font-size:.83rem;font-weight:500;color:var(--text)">'+esc(col.name)+'</span>'+
+      '<span style="font-size:.72rem;color:var(--muted);font-family:\'DM Mono\',monospace;padding:1px 7px;background:#f4f5f7;border-radius:10px">'+cards.filter(c=>c.colId===col.id).length+'</span>'+
+      '<button style="background:none;border:1px solid var(--border);border-radius:4px;padding:3px 9px;font-size:.75rem;cursor:pointer;color:var(--muted)" onclick="openStageEdit(\''+col.id+'\')">Edit</button>'+
+    '</div>'
+  ).join('');
+}
+
+// Drag & drop for stage reorder
+function stDragStart(e,idx){stageDragSrc=idx;e.currentTarget.style.opacity='.4';}
+function stDragOver(e,el){el.style.borderTop='2px solid var(--accent)';}
+function stDragLeave(el){el.style.borderTop='';}
+function stDragDrop(e,idx){
+  e.preventDefault();
+  if(stageDragSrc===null||stageDragSrc===idx)return;
+  const [moved]=COLUMNS.splice(stageDragSrc,1);
+  COLUMNS.splice(idx,0,moved);
+  stageDragSrc=null;
+  renderStageList();saveToStorage();render();
+}
+
+function addStage(){
+  const name=document.getElementById('stage-new-name').value.trim();
+  if(!name){showToast('Enter a stage name');return;}
+  const color=document.getElementById('stage-new-color').value;
+  COLUMNS.push({id:'col_'+Date.now(),name,color});
+  document.getElementById('stage-new-name').value='';
+  renderStageList();saveToStorage();render();
+  showToast('"'+name+'" stage added!');
+}
+
+// Quick edit single stage
+function openStageEdit(colId){
+  const col=COLUMNS.find(c=>c.id===colId);if(!col)return;
+  editingStageId=colId;
+  document.getElementById('stage-edit-title').textContent='Edit: '+col.name;
+  document.getElementById('stage-edit-name').value=col.name;
+  document.getElementById('stage-edit-color').value=col.color;
+  document.getElementById('stage-edit-strip').style.background=col.color;
+  openModal('stageEditOverlay');
+}
+
+function saveStageEdit(){
+  const col=COLUMNS.find(c=>c.id===editingStageId);if(!col)return;
+  const name=document.getElementById('stage-edit-name').value.trim();
+  if(!name){showToast('Stage name cannot be empty');return;}
+  col.name=name;
+  col.color=document.getElementById('stage-edit-color').value;
+  closeModal('stageEditOverlay');
+  // Also refresh stage manager if open
+  renderStageList();saveToStorage();render();
+  showToast('Stage updated!');
+}
+
+function deleteStage(){
+  const col=COLUMNS.find(c=>c.id===editingStageId);if(!col)return;
+  const count=cards.filter(c=>c.colId===editingStageId).length;
+  const msg=count>0
+    ?'Delete stage "'+col.name+'"? '+count+' card(s) will be moved to Notes.'
+    :'Delete stage "'+col.name+'"?';
+  if(!confirm(msg))return;
+  // Move cards to Notes
+  cards.forEach(c=>{if(c.colId===editingStageId)c.colId='notes';});
+  COLUMNS=COLUMNS.filter(c=>c.id!==editingStageId);
+  editingStageId=null;
+  closeModal('stageEditOverlay');
+  renderStageList();saveToStorage();render();
+  showToast('Stage deleted. Cards moved to Notes.');
+}
+
+
+const STORAGE_KEY='hwySP_v5';
+function saveToStorage(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({cards,LABELS,CL_TEMPLATE,COLUMNS,CL_LIBRARY}));}catch(e){}}
+function loadFromStorage(){try{const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return false;const p=JSON.parse(raw);if(p.cards)cards=p.cards;if(p.LABELS)LABELS=p.LABELS;if(p.CL_TEMPLATE)CL_TEMPLATE=p.CL_TEMPLATE;if(p.COLUMNS&&p.COLUMNS.length)COLUMNS=p.COLUMNS;if(p.CL_LIBRARY&&p.CL_LIBRARY.length)CL_LIBRARY=p.CL_LIBRARY;return true;}catch(e){return false;}}
+function exportData(){const blob=new Blob([JSON.stringify({cards,LABELS,CL_TEMPLATE,COLUMNS},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='hwySP-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(url);showToast('Backup downloaded!');}
+function importData(){const inp=document.createElement('input');inp.type='file';inp.accept='.json';inp.onchange=function(e){const file=e.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=function(ev){try{const p=JSON.parse(ev.target.result);if(!p.cards)throw new Error('bad');cards=p.cards;if(p.LABELS)LABELS=p.LABELS;if(p.CL_TEMPLATE)CL_TEMPLATE=p.CL_TEMPLATE;if(p.COLUMNS&&p.COLUMNS.length)COLUMNS=p.COLUMNS;if(p.CL_LIBRARY&&p.CL_LIBRARY.length)CL_LIBRARY=p.CL_LIBRARY;saveToStorage();render();showToast('Imported \u2014 '+cards.length+' cards!');}catch(e){showToast('Import failed');}};reader.readAsText(file);};inp.click();}
+
+// ── MODAL / TOAST / UTILS ────────────────────────────────────────────
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});});
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2500);}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+// ── PASSWORD / LOGIN ──────────────────────────────────────────────────
+const PWD_KEY = 'hwySP_pwd';
+const DEFAULT_PWD = 'HDOT2024'; // Default password — change via Settings
+
+function doLogin(){
+  const input = document.getElementById('login-input');
+  const errEl = document.getElementById('login-err');
+  const val = input.value.trim();
+  const stored = localStorage.getItem(PWD_KEY) || DEFAULT_PWD;
+  if(val === stored){
+    // Correct — store session and show app
+    sessionStorage.setItem('hwySP_auth','1');
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').style.display='';
+    input.value='';
+    errEl.textContent='';
+  } else {
+    // Wrong password
+    errEl.textContent='Incorrect password. Please try again.';
+    input.classList.add('error');
+    input.value='';
+    setTimeout(()=>input.classList.remove('error'),400);
+    input.focus();
+  }
+}
+
+function checkAuth(){
+  // Already authenticated this session?
+  if(sessionStorage.getItem('hwySP_auth')==='1'){
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app').style.display='';
+    return true;
+  }
+  // Show login
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').classList.remove('hidden');
+  setTimeout(()=>document.getElementById('login-input').focus(), 100);
+  return false;
+}
+
+function changePassword(){
+  const current = prompt('Enter current password:');
+  if(!current) return;
+  const stored = localStorage.getItem(PWD_KEY) || DEFAULT_PWD;
+  if(current !== stored){ showToast('Incorrect current password'); return; }
+  const newPwd = prompt('Enter new password (min 6 characters):');
+  if(!newPwd||newPwd.length<6){ showToast('Password too short — min 6 characters'); return; }
+  const confirm = prompt('Confirm new password:');
+  if(newPwd !== confirm){ showToast('Passwords do not match'); return; }
+  localStorage.setItem(PWD_KEY, newPwd);
+  showToast('✓ Password changed successfully!');
+}
+
+function logout(){
+  if(!confirm('Log out?')) return;
+  sessionStorage.removeItem('hwySP_auth');
+  checkAuth();
+}
+
+const loaded=loadFromStorage();
+if(checkAuth()){
+  render();
+  if(loaded) showToast('Board restored \u2014 '+cards.length+' cards');
+}
+</script>
+</div><!-- end #app -->
+</body>
+</html>
